@@ -111,6 +111,23 @@
 
   .form-disclaimer { text-align: center; font-size: 0.74rem; color: var(--muted); margin-top: 14px; line-height: 1.5; }
 
+  /* STEP WIZARD */
+  .steps-indicator { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 36px; }
+  .step-dot { width: 36px; height: 36px; border-radius: 50%; background: var(--night-mid); border: 2px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.85rem; color: var(--muted); transition: all 0.3s; }
+  .step-dot.active { background: var(--amber); border-color: var(--amber); color: var(--night); }
+  .step-dot.done { background: var(--green); border-color: var(--green); color: #fff; }
+  .step-line { width: 60px; height: 2px; background: rgba(255,255,255,0.08); }
+  .step-title-main { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 1.2rem; color: var(--white); margin-bottom: 24px; text-align: center; }
+  .btn-back { background: transparent; border: 1px solid rgba(255,255,255,0.12); color: var(--muted); font-family: 'Sora', sans-serif; font-weight: 600; font-size: 0.95rem; padding: 17px 24px; border-radius: var(--radius); cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+  .btn-back:hover { border-color: rgba(255,255,255,0.3); color: var(--white); }
+  .confirm-box { background: var(--night-mid); border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); }
+  .confirm-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 13px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.875rem; }
+  .confirm-row:last-child { border-bottom: none; }
+  .confirm-row span { color: var(--muted); flex-shrink: 0; }
+  .confirm-row strong { color: var(--white); text-align: right; font-weight: 600; }
+  .confirm-row.highlight { background: rgba(245,166,35,0.08); }
+  .confirm-row.highlight strong { color: var(--amber); font-size: 1.1rem; }
+
   .spinner { width: 18px; height: 18px; border: 2px solid rgba(13,27,42,0.3); border-top-color: var(--night); border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -267,103 +284,109 @@
     <div class="booking-card">
       <form id="booking-form" novalidate>
 
-        <!-- DIRECTION -->
-        <div class="form-group full" style="margin-bottom: 24px;">
-          <label>Fahrtrichtung <span>*</span></label>
-          <div class="direction-toggle">
-            <button type="button" class="dir-btn active" onclick="setDir('hin',this)">🇦🇹 → ✈&nbsp; Hinfahrt (AT → BTS)</button>
-            <button type="button" class="dir-btn" onclick="setDir('rueck',this)">✈ → 🇦🇹&nbsp; Rückfahrt (BTS → AT)</button>
-          </div>
-          <input type="hidden" id="direction" value="Hinfahrt AT → BTS">
+        <!-- STEP INDICATOR -->
+        <div class="steps-indicator">
+          <div class="step-dot active" id="dot-1">1</div>
+          <div class="step-line"></div>
+          <div class="step-dot" id="dot-2">2</div>
+          <div class="step-line"></div>
+          <div class="step-dot" id="dot-3">3</div>
         </div>
 
-        <div class="form-grid">
+        <!-- STEP 1: ROUTE -->
+        <div class="form-step" id="step-1">
+          <div class="step-title-main">Wohin fahren Sie?</div>
 
-          <div class="form-group">
+          <div class="form-group full" style="margin-bottom:20px;">
+            <div class="direction-toggle">
+              <button type="button" class="dir-btn active" onclick="setDir('hin',this)">🇦🇹 → ✈ Hinfahrt</button>
+              <button type="button" class="dir-btn" onclick="setDir('rueck',this)">✈ → 🇦🇹 Rückfahrt</button>
+            </div>
+            <input type="hidden" id="direction" value="Hinfahrt AT → BTS">
+          </div>
+
+          <div class="form-group full">
+            <label>Ihre Abholadresse <span>*</span></label>
+            <input type="text" class="form-control" id="f-adresse" placeholder="Straße, PLZ, Ort" autocomplete="street-address">
+            <div class="field-error" id="err-adresse">Bitte Adresse eingeben.</div>
+          </div>
+
+          <div class="form-group full">
+            <label id="label-von">Datum &amp; Uhrzeit <span>*</span></label>
+            <input type="datetime-local" class="form-control" id="f-von">
+            <div class="field-error" id="err-von">Bitte Datum wählen.</div>
+          </div>
+
+          <div class="form-group full" id="group-bis">
+            <label id="label-bis">Rückflug (optional)</label>
+            <input type="datetime-local" class="form-control" id="f-bis">
+          </div>
+
+          <!-- PRICE -->
+          <div class="price-estimate" style="margin-top:8px;">
+            <div>
+              <div class="price-est-label">Ihr Festpreis</div>
+              <div class="price-est-note" id="km-display">Adresse eingeben</div>
+            </div>
+            <div id="price-display" class="price-est-val">–</div>
+          </div>
+
+          <button type="button" class="btn-submit" id="btn-next-1" onclick="goStep(2)" style="margin-top:20px;">
+            Weiter →
+          </button>
+        </div>
+
+        <!-- STEP 2: PERSONAL -->
+        <div class="form-step" id="step-2" style="display:none;">
+          <div class="step-title-main">Ihre Daten</div>
+
+          <div class="form-group full">
             <label>Vor- &amp; Nachname <span>*</span></label>
             <input type="text" class="form-control" id="f-name" placeholder="Maria Mustermann" autocomplete="name">
             <div class="field-error" id="err-name">Bitte Namen eingeben.</div>
           </div>
 
-          <div class="form-group">
-            <label>Anzahl Personen <span>*</span></label>
-            <select class="form-control" id="f-personen">
-              <option value="">Bitte wählen…</option>
-              <option value="1 Person">1 Person</option>
-              <option value="2 Personen">2 Personen</option>
-              <option value="3 Personen">3 Personen</option>
-              <option value="4 Personen">4 Personen</option>
-              <option value="5+ Personen">5+ Personen (auf Anfrage)</option>
-            </select>
-            <div class="field-error" id="err-personen">Bitte Personenanzahl wählen.</div>
-          </div>
-
           <div class="form-group full">
-            <label>Abholadresse (Straße, PLZ, Ort) <span>*</span></label>
-            <input type="text" class="form-control" id="f-adresse" placeholder="Musterstraße 1, 1010 Wien" autocomplete="street-address">
-            <div class="field-error" id="err-adresse">Bitte vollständige Adresse eingeben.</div>
-          </div>
-
-          <div class="form-group">
-            <label id="label-von">Abflugdatum &amp; Abholzeit <span>*</span></label>
-            <input type="datetime-local" class="form-control" id="f-von">
-            <div class="field-error" id="err-von">Bitte Datum und Uhrzeit wählen.</div>
-          </div>
-
-          <div class="form-group" id="group-bis">
-            <label id="label-bis">Rückflug Ankunft (optional)</label>
-            <input type="datetime-local" class="form-control" id="f-bis">
-          </div>
-
-          <hr class="form-divider">
-
-          <div class="form-group">
             <label>Telefonnummer <span>*</span></label>
             <input type="tel" class="form-control" id="f-tel" placeholder="+43 699 1234567" autocomplete="tel">
             <div class="field-error" id="err-tel">Bitte Telefonnummer eingeben.</div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group full">
             <label>E-Mail <span>*</span></label>
             <input type="email" class="form-control" id="f-email" placeholder="maria@beispiel.at" autocomplete="email">
-            <div class="field-error" id="err-email">Bitte gültige E-Mail eingeben.</div>
+            <div class="field-error" id="err-email">Bitte E-Mail eingeben.</div>
           </div>
 
-          <div class="form-group">
-            <label>Gepäck</label>
-            <select class="form-control" id="f-gepaeck">
-              <option value="Normal (1-2 Koffer)">Normal (1–2 Koffer)</option>
-              <option value="Viel (3+ Koffer)">Viel (3+ Koffer)</option>
-              <option value="Nur Handgepäck">Nur Handgepäck</option>
-              <option value="Sperrgepäck / Ski">Sperrgepäck / Ski</option>
-            </select>
+          <div style="display:flex; gap:12px; margin-top:8px;">
+            <button type="button" class="btn-back" onclick="goStep(1)">← Zurück</button>
+            <button type="button" class="btn-submit" style="flex:1;" onclick="goStep(3)">Weiter →</button>
+          </div>
+        </div>
+
+        <!-- STEP 3: CONFIRM -->
+        <div class="form-step" id="step-3" style="display:none;">
+          <div class="step-title-main">Buchung bestätigen</div>
+
+          <div class="confirm-box">
+            <div class="confirm-row"><span>Richtung</span><strong id="c-dir">—</strong></div>
+            <div class="confirm-row"><span>Abholung</span><strong id="c-adresse">—</strong></div>
+            <div class="confirm-row"><span>Datum</span><strong id="c-von">—</strong></div>
+            <div class="confirm-row" id="c-bis-row" style="display:none;"><span>Rückflug</span><strong id="c-bis">—</strong></div>
+            <div class="confirm-row"><span>Name</span><strong id="c-name">—</strong></div>
+            <div class="confirm-row"><span>Telefon</span><strong id="c-tel">—</strong></div>
+            <div class="confirm-row"><span>E-Mail</span><strong id="c-email">—</strong></div>
+            <div class="confirm-row highlight"><span>Festpreis</span><strong id="c-preis">—</strong></div>
           </div>
 
-          <div class="form-group">
-            <label>Anmerkungen</label>
-            <input type="text" class="form-control" id="f-notiz" placeholder="z.B. Kindersitz, Rollstuhl, Flugnummer…">
-          </div>
-
-          <!-- PRICE ESTIMATE -->
-          <div class="form-group full">
-            <div class="price-estimate">
-              <div>
-                <div class="price-est-label">Geschätzter Festpreis</div>
-                <div class="price-est-note" id="km-display">Adresse eingeben für Preisberechnung</div>
-              </div>
-              <div id="price-display" class="price-est-val">auf Anfrage</div>
-            </div>
-          </div>
-
-          <!-- SUBMIT -->
-          <div class="form-group full">
-            <button type="submit" class="btn-submit" id="submit-btn">
-              <span id="btn-text">✈ Buchung absenden</span>
+          <div style="display:flex; gap:12px; margin-top:20px;">
+            <button type="button" class="btn-back" onclick="goStep(2)">← Zurück</button>
+            <button type="submit" class="btn-submit" id="submit-btn" style="flex:1;">
+              <span id="btn-text">✈ Jetzt verbindlich buchen</span>
               <div class="spinner" id="btn-spinner"></div>
             </button>
-            <p class="form-disclaimer">Ihre Daten werden ausschließlich für die Buchungsabwicklung verwendet und nicht an Dritte weitergegeben.</p>
           </div>
-
+          <p class="form-disclaimer">Mit der Buchung erhalten Sie sofort eine Bestätigungs-E-Mail.</p>
         </div>
       </form>
     </div>
@@ -459,63 +482,130 @@
 
 <!-- ══════════════════════════════════════════════════════════════════ SCRIPT -->
 <script>
-// ─── CONFIG — NACH APPS SCRIPT DEPLOYMENT EINTRAGEN ─────────────────────────
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyHUJtg2v1fIhzLSf9MXhhhByNY9dCjMQNlJac4nuKlgRqIkBdZb_aRIsYobIzGqBfn/exec';
-// ────────────────────────────────────────────────────────────────────────────
+// CONFIG
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz5CIJUk5ij3Hh4qRdIyquDNt3u0xQ7Z2HXWtAiD5KMvdD-DChw5He8nXC2eS7utopB/exec';
 
+// ─── DIRECTION ───────────────────────────────────────────────────────────────
 function setDir(dir, btn) {
   document.querySelectorAll('.dir-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('direction').value = dir === 'hin' ? 'Hinfahrt AT → BTS' : 'Rückfahrt BTS → AT';
   document.getElementById('label-von').innerHTML = dir === 'hin'
-    ? 'Abflugdatum &amp; Abholzeit <span>*</span>'
-    : 'Ankunftsdatum &amp; Abholzeit <span>*</span>';
-  document.getElementById('label-bis').textContent = dir === 'hin' ? 'Rückflug Ankunft (optional)' : 'Nächster Hinflug (optional)';
+    ? 'Datum &amp; Uhrzeit <span>*</span>'
+    : 'Ankunft Datum &amp; Uhrzeit <span>*</span>';
+  document.getElementById('label-bis').textContent = dir === 'hin' ? 'Rückflug (optional)' : 'Nächster Hinflug (optional)';
   updatePrice();
 }
 
-// ─── PREIS VIA GOOGLE MAPS ──────────────────────────────────────────
+// ─── STEP WIZARD ─────────────────────────────────────────────────────────────
+function goStep(n) {
+  // Validate before advancing
+  if (n === 2 && !validateStep1()) return;
+  if (n === 3 && !validateStep2()) return;
+
+  // Update confirm box
+  if (n === 3) fillConfirm();
+
+  // Hide all steps
+  document.querySelectorAll('.form-step').forEach(s => s.style.display = 'none');
+  document.getElementById('step-' + n).style.display = 'block';
+
+  // Update dots
+  document.querySelectorAll('.step-dot').forEach((d, i) => {
+    d.classList.remove('active', 'done');
+    if (i + 1 < n) d.classList.add('done');
+    if (i + 1 === n) d.classList.add('active');
+  });
+
+  document.getElementById('step-' + n).scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function validateStep1() {
+  let ok = true;
+  const adr = document.getElementById('f-adresse').value.trim();
+  const von = document.getElementById('f-von').value;
+  if (adr.length < 5) {
+    document.getElementById('f-adresse').classList.add('error');
+    document.getElementById('err-adresse').style.display = 'block';
+    ok = false;
+  } else {
+    document.getElementById('f-adresse').classList.remove('error');
+    document.getElementById('err-adresse').style.display = 'none';
+  }
+  if (!von) {
+    document.getElementById('f-von').classList.add('error');
+    document.getElementById('err-von').style.display = 'block';
+    ok = false;
+  } else {
+    document.getElementById('f-von').classList.remove('error');
+    document.getElementById('err-von').style.display = 'none';
+  }
+  return ok;
+}
+
+function validateStep2() {
+  let ok = true;
+  const checks = [
+    { id: 'f-name', err: 'err-name', fn: v => v.trim().length > 1 },
+    { id: 'f-tel',  err: 'err-tel',  fn: v => v.trim().length > 5 },
+    { id: 'f-email',err: 'err-email',fn: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+  ];
+  checks.forEach(c => {
+    const el = document.getElementById(c.id);
+    const er = document.getElementById(c.err);
+    if (!c.fn(el.value)) { el.classList.add('error'); er.style.display = 'block'; ok = false; }
+    else { el.classList.remove('error'); er.style.display = 'none'; }
+  });
+  return ok;
+}
+
+function fillConfirm() {
+  document.getElementById('c-dir').textContent     = document.getElementById('direction').value;
+  document.getElementById('c-adresse').textContent = document.getElementById('f-adresse').value;
+  document.getElementById('c-von').textContent     = fmtDT(document.getElementById('f-von').value);
+  document.getElementById('c-name').textContent    = document.getElementById('f-name').value;
+  document.getElementById('c-tel').textContent     = document.getElementById('f-tel').value;
+  document.getElementById('c-email').textContent   = document.getElementById('f-email').value;
+  document.getElementById('c-preis').textContent   = document.getElementById('price-display').textContent;
+  const bis = document.getElementById('f-bis').value;
+  if (bis) {
+    document.getElementById('c-bis').textContent = fmtDT(bis);
+    document.getElementById('c-bis-row').style.display = 'flex';
+  }
+}
+
+// ─── PREIS VIA GOOGLE MAPS ───────────────────────────────────────────────────
 let priceDebounce = null;
 let currentKm = 0;
 
 function updatePrice() {
-  const adr  = document.getElementById('f-adresse').value.trim();
+  const adr   = document.getElementById('f-adresse').value.trim();
   const rueck = document.getElementById('f-bis').value !== '';
-  const el   = document.getElementById('price-display');
-  const kmEl = document.getElementById('km-display');
+  const el    = document.getElementById('price-display');
+  const kmEl  = document.getElementById('km-display');
 
   if (!adr || adr.length < 6) {
-    el.textContent = 'auf Anfrage';
-    if (kmEl) kmEl.textContent = '';
+    el.textContent = '–';
+    if (kmEl) kmEl.textContent = 'Adresse eingeben';
     currentKm = 0;
     return;
   }
 
-  // Debounce: warte 800ms nach letzter Eingabe
   clearTimeout(priceDebounce);
   el.textContent = '…';
   priceDebounce = setTimeout(async () => {
     try {
-      const params = new URLSearchParams({
-        action:  'price',
-        adresse: adr,
-        rueck:   rueck ? 'true' : 'false'
-      });
-      // no-cors weglassen damit wir die Antwort lesen können
-      const res  = await fetch(APPS_SCRIPT_URL + '?' + params.toString(), {
-        method: 'GET',
-        redirect: 'follow'
-      });
+      const params = new URLSearchParams({ action: 'price', adresse: adr, rueck: rueck ? 'true' : 'false' });
+      const res  = await fetch(APPS_SCRIPT_URL + '?' + params.toString(), { method: 'GET', redirect: 'follow' });
       const text = await res.text();
       const data = JSON.parse(text);
-
       if (data.status === 'ok') {
         currentKm = data.km;
         el.textContent = data.preis + ' €';
-        if (kmEl) kmEl.textContent = '(' + data.km + ' km)';
+        if (kmEl) kmEl.textContent = data.km + ' km Fahrt';
       } else {
         el.textContent = 'auf Anfrage';
-        if (kmEl) kmEl.textContent = data.message || '';
+        if (kmEl) kmEl.textContent = 'Adresse nicht gefunden';
         currentKm = 0;
       }
     } catch (err) {
@@ -528,7 +618,7 @@ function updatePrice() {
 document.getElementById('f-adresse').addEventListener('input', updatePrice);
 document.getElementById('f-bis').addEventListener('change', updatePrice);
 
-// Set minimum datetime to 2 hours from now
+// Min datetime
 (function() {
   const now = new Date(Date.now() + 2 * 3600000);
   const pad = n => String(n).padStart(2, '0');
@@ -537,25 +627,6 @@ document.getElementById('f-bis').addEventListener('change', updatePrice);
   document.getElementById('f-bis').min = min;
 })();
 
-function validate() {
-  let ok = true;
-  const checks = [
-    { id: 'f-name',     err: 'err-name',     fn: v => v.trim().length > 1 },
-    { id: 'f-personen', err: 'err-personen', fn: v => v !== '' },
-    { id: 'f-adresse',  err: 'err-adresse',  fn: v => v.trim().length > 4 },
-    { id: 'f-von',      err: 'err-von',      fn: v => v !== '' },
-    { id: 'f-tel',      err: 'err-tel',      fn: v => v.trim().length > 5 },
-    { id: 'f-email',    err: 'err-email',    fn: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
-  ];
-  checks.forEach(c => {
-    const el = document.getElementById(c.id);
-    const er = document.getElementById(c.err);
-    if (!c.fn(el.value)) { el.classList.add('error'); er.style.display = 'block'; ok = false; }
-    else { el.classList.remove('error'); er.style.display = 'none'; }
-  });
-  return ok;
-}
-
 function fmtDT(val) {
   if (!val) return '';
   const d = new Date(val);
@@ -563,9 +634,9 @@ function fmtDT(val) {
     + ' um ' + d.toLocaleTimeString('de-AT', { hour:'2-digit', minute:'2-digit' }) + ' Uhr';
 }
 
+// ─── SUBMIT ──────────────────────────────────────────────────────────────────
 document.getElementById('booking-form').addEventListener('submit', async function(e) {
   e.preventDefault();
-  if (!validate()) { document.querySelector('.form-control.error').scrollIntoView({ behavior:'smooth', block:'center' }); return; }
 
   const btn = document.getElementById('submit-btn');
   document.getElementById('btn-text').textContent = 'Wird gesendet…';
@@ -576,40 +647,27 @@ document.getElementById('booking-form').addEventListener('submit', async functio
     name:      document.getElementById('f-name').value.trim(),
     von:       fmtDT(document.getElementById('f-von').value),
     bis:       fmtDT(document.getElementById('f-bis').value),
-    preis:     document.getElementById('price-display').textContent.replace(' €','').replace('auf Anfrage','0'),
+    preis:     document.getElementById('price-display').textContent.replace(' €','').replace('–','0').replace('auf Anfrage','0'),
     km:        currentKm,
     tel:       document.getElementById('f-tel').value.trim(),
     email:     document.getElementById('f-email').value.trim(),
     adresse:   document.getElementById('f-adresse').value.trim(),
     direction: document.getElementById('direction').value,
-    personen:  document.getElementById('f-personen').value,
-    gepaeck:   document.getElementById('f-gepaeck').value,
-    notiz:     document.getElementById('f-notiz').value.trim(),
+    personen:  '1',
+    gepaeck:   'Normal',
+    notiz:     '',
     timestamp: new Date().toLocaleString('de-AT')
   };
 
   try {
-    // GET mit URL-Parametern — einzig zuverlässige Methode mit Apps Script + no-cors
-    const params = new URLSearchParams({
-      name:      payload.name,
-      von:       payload.von,
-      bis:       payload.bis,
-      preis:     payload.preis,
-      tel:       payload.tel,
-      email:     payload.email,
-      adresse:   payload.adresse,
-      direction: payload.direction,
-      personen:  payload.personen,
-      gepaeck:   payload.gepaeck,
-      notiz:     payload.notiz,
-      timestamp: payload.timestamp
-    });
+    const params = new URLSearchParams(payload);
     await fetch(APPS_SCRIPT_URL + '?' + params.toString(), { method: 'GET', mode: 'no-cors' });
-  } catch(_) { /* Fehler ignorieren — Danke-Seite trotzdem zeigen */ }
+  } catch(_) {}
 
   showThankYou(payload);
 });
 
+// ─── THANK YOU ───────────────────────────────────────────────────────────────
 function showThankYou(d) {
   document.getElementById('main-page').style.display = 'none';
   const ty = document.getElementById('thank-you');
@@ -620,13 +678,13 @@ function showThankYou(d) {
   document.getElementById('ty-von').textContent      = d.von;
   document.getElementById('ty-personen').textContent = d.personen;
   document.getElementById('ty-kontakt').textContent  = d.tel + ' · ' + d.email;
-  document.getElementById('ty-preis').textContent    = d.preis;
+  document.getElementById('ty-preis').textContent    = d.preis + ' €';
   if (d.bis) {
     document.getElementById('ty-bis').textContent = d.bis;
     document.getElementById('ty-bis-row').style.display = 'flex';
   }
   const msg = encodeURIComponent(
-    `Hallo Oliver! Ich habe soeben eine Buchung abgeschickt.\n\nName: ${d.name}\nRichtung: ${d.direction}\nAbholung: ${d.adresse}\nDatum: ${d.von}\nPersonen: ${d.personen}\n\nBitte bestätigen!`
+    `Hallo Oliver! Neue Buchung eingegangen.\n\nName: ${d.name}\nRichtung: ${d.direction}\nAbholung: ${d.adresse}\nDatum: ${d.von}\nPreis: ${d.preis} €\n\nBitte bestätigen!`
   );
   document.getElementById('ty-wa-btn').href = `https://wa.me/4369919567596?text=${msg}`;
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -634,13 +692,14 @@ function showThankYou(d) {
 
 function resetForm() {
   document.getElementById('booking-form').reset();
-  document.getElementById('price-display').textContent = 'auf Anfrage';
+  document.getElementById('price-display').textContent = '–';
   document.getElementById('thank-you').style.display = 'none';
   document.getElementById('main-page').style.display = 'block';
   document.getElementById('submit-btn').disabled = false;
-  document.getElementById('btn-text').textContent = '✈ Buchung absenden';
+  document.getElementById('btn-text').textContent = '✈ Jetzt verbindlich buchen';
   document.getElementById('btn-spinner').style.display = 'none';
   document.getElementById('ty-bis-row').style.display = 'none';
+  goStep(1);
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
