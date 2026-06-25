@@ -556,12 +556,23 @@ document.getElementById('booking-form').addEventListener('submit', async functio
   };
 
   try {
-    if (APPS_SCRIPT_URL !== 'DEINE_APPS_SCRIPT_URL_HIER') {
-      await fetch(APPS_SCRIPT_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
-    } else {
-      await new Promise(r => setTimeout(r, 900)); // demo delay
-    }
-  } catch(_) { /* no-cors — can't read response, proceed anyway */ }
+    // GET mit URL-Parametern — einzig zuverlässige Methode mit Apps Script + no-cors
+    const params = new URLSearchParams({
+      name:      payload.name,
+      von:       payload.von,
+      bis:       payload.bis,
+      preis:     payload.preis,
+      tel:       payload.tel,
+      email:     payload.email,
+      adresse:   payload.adresse,
+      direction: payload.direction,
+      personen:  payload.personen,
+      gepaeck:   payload.gepaeck,
+      notiz:     payload.notiz,
+      timestamp: payload.timestamp
+    });
+    await fetch(APPS_SCRIPT_URL + '?' + params.toString(), { method: 'GET', mode: 'no-cors' });
+  } catch(_) { /* Fehler ignorieren — Danke-Seite trotzdem zeigen */ }
 
   showThankYou(payload);
 });
