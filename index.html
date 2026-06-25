@@ -349,7 +349,7 @@
             <div class="price-estimate">
               <div>
                 <div class="price-est-label">Geschätzter Festpreis</div>
-                <div class="price-est-note">Wird von Oliver vor der Fahrt bestätigt</div>
+                <div class="price-est-note" id="km-display">Adresse eingeben für Preisberechnung</div>
               </div>
               <div id="price-display" class="price-est-val">auf Anfrage</div>
             </div>
@@ -460,7 +460,7 @@
 <!-- ══════════════════════════════════════════════════════════════════ SCRIPT -->
 <script>
 // ─── CONFIG — NACH APPS SCRIPT DEPLOYMENT EINTRAGEN ─────────────────────────
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwdQxFu-7bB0hWz0dcblMNFNoZ_3hDwUa8mJ4omRvFkztX2C7Kp3fw4el8NUBUqz46K/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwXYSq_8fYAazHzYpcr3waIDFrc7qsfDI3938qR-6JPOkkzClsWd3plSssf48F5A7Hj/exec';
 // ────────────────────────────────────────────────────────────────────────────
 
 function setDir(dir, btn) {
@@ -474,25 +474,52 @@ function setDir(dir, btn) {
   updatePrice();
 }
 
+// ─── PREIS VIA GOOGLE MAPS ──────────────────────────────────────────
+let priceDebounce = null;
+let currentKm = 0;
+
 function updatePrice() {
-  const adr = document.getElementById('f-adresse').value.toLowerCase();
-  const pers = document.getElementById('f-personen').value;
-  const rueck = document.getElementById('f-bis').value;
-  const el = document.getElementById('price-display');
-  if (!adr || !pers) { el.textContent = 'auf Anfrage'; return; }
-  let base = 79;
-  if (/graz|steiermark/.test(adr)) base = 149;
-  else if (/linz|oberösterreich/.test(adr)) base = 169;
-  else if (/salzburg/.test(adr)) base = 199;
-  else if (/innsbruck|tirol/.test(adr)) base = 249;
-  else if (/klagenfurt|kärnten/.test(adr)) base = 189;
-  else if (/st\.?\s*pölten|niederösterreich/.test(adr)) base = 99;
-  else if (/burgenland/.test(adr)) base = 89;
-  if (rueck) base = Math.round(base * 1.8);
-  el.textContent = 'ab ' + base + ' €';
+  const adr  = document.getElementById('f-adresse').value.trim();
+  const rueck = document.getElementById('f-bis').value !== '';
+  const el   = document.getElementById('price-display');
+  const kmEl = document.getElementById('km-display');
+
+  if (!adr || adr.length < 6) {
+    el.textContent = 'auf Anfrage';
+    if (kmEl) kmEl.textContent = '';
+    currentKm = 0;
+    return;
+  }
+
+  // Debounce: warte 800ms nach letzter Eingabe
+  clearTimeout(priceDebounce);
+  el.textContent = '…';
+  priceDebounce = setTimeout(async () => {
+    try {
+      const params = new URLSearchParams({
+        action:  'price',
+        adresse: adr,
+        rueck:   rueck ? 'true' : 'false'
+      });
+      const res  = await fetch(APPS_SCRIPT_URL + '?' + params.toString());
+      const data = await res.json();
+
+      if (data.status === 'ok') {
+        currentKm = data.km;
+        el.textContent = data.preis + ' €';
+        if (kmEl) kmEl.textContent = '(' + data.km + ' km)';
+      } else {
+        el.textContent = 'auf Anfrage';
+        if (kmEl) kmEl.textContent = data.message || '';
+        currentKm = 0;
+      }
+    } catch (err) {
+      el.textContent = 'auf Anfrage';
+      currentKm = 0;
+    }
+  }, 800);
 }
 
-document.getElementById('f-personen').addEventListener('change', updatePrice);
 document.getElementById('f-adresse').addEventListener('input', updatePrice);
 document.getElementById('f-bis').addEventListener('change', updatePrice);
 
@@ -544,7 +571,8 @@ document.getElementById('booking-form').addEventListener('submit', async functio
     name:      document.getElementById('f-name').value.trim(),
     von:       fmtDT(document.getElementById('f-von').value),
     bis:       fmtDT(document.getElementById('f-bis').value),
-    preis:     document.getElementById('price-display').textContent,
+    preis:     document.getElementById('price-display').textContent.replace(' €','').replace('auf Anfrage','0'),
+    km:        currentKm,
     tel:       document.getElementById('f-tel').value.trim(),
     email:     document.getElementById('f-email').value.trim(),
     adresse:   document.getElementById('f-adresse').value.trim(),
