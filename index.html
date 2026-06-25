@@ -460,7 +460,7 @@
 <!-- ══════════════════════════════════════════════════════════════════ SCRIPT -->
 <script>
 // ─── CONFIG — NACH APPS SCRIPT DEPLOYMENT EINTRAGEN ─────────────────────────
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwXYSq_8fYAazHzYpcr3waIDFrc7qsfDI3938qR-6JPOkkzClsWd3plSssf48F5A7Hj/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbytdudHqXCokUc9nWcaYKTKYIeteld-e6AIXBIJ5cT9KiwS2VzXEfSU1k4STcRyui-8/exec';
 // ────────────────────────────────────────────────────────────────────────────
 
 function setDir(dir, btn) {
@@ -501,8 +501,13 @@ function updatePrice() {
         adresse: adr,
         rueck:   rueck ? 'true' : 'false'
       });
-      const res  = await fetch(APPS_SCRIPT_URL + '?' + params.toString());
-      const data = await res.json();
+      // no-cors weglassen damit wir die Antwort lesen können
+      const res  = await fetch(APPS_SCRIPT_URL + '?' + params.toString(), {
+        method: 'GET',
+        redirect: 'follow'
+      });
+      const text = await res.text();
+      const data = JSON.parse(text);
 
       if (data.status === 'ok') {
         currentKm = data.km;
