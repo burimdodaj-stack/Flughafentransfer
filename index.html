@@ -3,580 +3,202 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Transfer Wien ↔ Bratislava Flughafen | Oliver fährt dich</title>
-<meta name="description" content="Stressfreier Transfer von Wien nach Bratislava Airport. Festpreis, Tür zu Tür, 24/7. Kein Umsteigen, kein Parkstress. Jetzt buchen.">
+<title>Transfer nach Bratislava Airport | Oliver fährt dich</title>
+<meta name="description" content="Stressfreier Transfer von ganz Österreich zum Flughafen Bratislava. Festpreis, Tür zu Tür, 24/7. Jetzt online buchen.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
     --night: #0D1B2A;
     --night-mid: #1E2D3D;
+    --night-light: #243447;
     --amber: #F5A623;
     --amber-dark: #D4891A;
     --ice: #F8F9FA;
     --muted: #8A9BB0;
     --white: #ffffff;
     --green: #22C55E;
+    --red: #EF4444;
     --radius: 12px;
   }
-
   html { scroll-behavior: smooth; }
-
-  body {
-    font-family: 'Inter', sans-serif;
-    background: var(--night);
-    color: var(--ice);
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
+  body { font-family: 'Inter', sans-serif; background: var(--night); color: var(--ice); line-height: 1.6; overflow-x: hidden; }
 
   /* NAV */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 5%;
-    background: rgba(13,27,42,0.92);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(245,166,35,0.15);
-  }
-  .logo {
-    font-family: 'Sora', sans-serif;
-    font-weight: 800;
-    font-size: 1.25rem;
-    color: var(--white);
-    text-decoration: none;
-    letter-spacing: -0.02em;
-  }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 16px 5%; background: rgba(13,27,42,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(245,166,35,0.15); }
+  .logo { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.2rem; color: var(--white); text-decoration: none; letter-spacing: -0.02em; }
   .logo span { color: var(--amber); }
-  .nav-cta {
-    background: var(--amber);
-    color: var(--night);
-    font-family: 'Sora', sans-serif;
-    font-weight: 700;
-    font-size: 0.875rem;
-    padding: 10px 22px;
-    border-radius: 8px;
-    text-decoration: none;
-    transition: background 0.2s, transform 0.1s;
-    white-space: nowrap;
-  }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .nav-call { display: flex; align-items: center; gap: 6px; color: var(--green); font-family: 'Sora', sans-serif; font-weight: 600; font-size: 0.875rem; text-decoration: none; border: 1px solid rgba(34,197,94,0.3); padding: 8px 16px; border-radius: 8px; transition: background 0.2s; }
+  .nav-call:hover { background: rgba(34,197,94,0.08); }
+  .nav-cta { background: var(--amber); color: var(--night); font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.875rem; padding: 10px 22px; border-radius: 8px; text-decoration: none; transition: background 0.2s, transform 0.1s; }
   .nav-cta:hover { background: var(--amber-dark); transform: translateY(-1px); }
 
   /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 120px 5% 80px;
-    position: relative;
-    overflow: hidden;
-    text-align: center;
-  }
+  .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 120px 5% 80px; position: relative; overflow: hidden; text-align: center; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(245,166,35,0.07) 0%, transparent 70%); }
+  .hero-eyebrow { font-family: 'Sora', sans-serif; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; color: var(--amber); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; position: relative; z-index: 1; }
+  .hero-eyebrow::before, .hero-eyebrow::after { content: ''; display: block; width: 36px; height: 1px; background: var(--amber); opacity: 0.45; }
+  h1 { font-family: 'Sora', sans-serif; font-size: clamp(2rem, 5.5vw, 3.8rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.03em; color: var(--white); max-width: 860px; margin: 0 auto 16px; position: relative; z-index: 1; }
+  h1 em { font-style: normal; color: var(--amber); }
+  .hero-sub { font-size: clamp(0.95rem, 2vw, 1.15rem); color: var(--muted); max-width: 540px; margin: 0 auto 36px; line-height: 1.7; position: relative; z-index: 1; }
 
-  .hero-bg {
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(245,166,35,0.08) 0%, transparent 70%);
-  }
+  /* ROUTE ANIMATION */
+  .route-visual { display: flex; align-items: center; margin: 0 auto 40px; position: relative; z-index: 1; }
+  .city-badge { background: var(--night-mid); border: 1px solid rgba(245,166,35,0.3); border-radius: 10px; padding: 10px 20px; font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.92rem; color: var(--white); }
+  .city-badge small { display: block; font-size: 0.63rem; font-weight: 400; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+  .route-line { width: 100px; height: 2px; background: linear-gradient(90deg, rgba(245,166,35,0.3), var(--amber), rgba(245,166,35,0.3)); position: relative; overflow: hidden; }
+  .route-line::after { content: ''; position: absolute; top: 50%; transform: translateY(-50%); width: 40%; height: 100%; background: linear-gradient(90deg, transparent, #fff, transparent); animation: travel 2.2s ease-in-out infinite; }
+  @keyframes travel { 0% { left: -40%; } 100% { left: 140%; } }
+  .route-plane { position: absolute; top: 50%; transform: translateY(-50%); font-size: 1rem; animation: flyplane 2.2s ease-in-out infinite; }
+  @keyframes flyplane { 0% { left: 8%; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { left: 88%; opacity: 0; } }
 
-  .hero-eyebrow {
-    font-family: 'Sora', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--amber);
-    margin-bottom: 20px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .hero-eyebrow::before, .hero-eyebrow::after {
-    content: '';
-    display: block; width: 32px; height: 1px;
-    background: var(--amber); opacity: 0.5;
-  }
-
-  h1 {
-    font-family: 'Sora', sans-serif;
-    font-size: clamp(2.2rem, 6vw, 4.2rem);
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    color: var(--white);
-    max-width: 820px;
-    margin: 0 auto 16px;
-  }
-  h1 em {
-    font-style: normal;
-    color: var(--amber);
-  }
-
-  .hero-sub {
-    font-size: clamp(1rem, 2vw, 1.2rem);
-    color: var(--muted);
-    max-width: 520px;
-    margin: 0 auto 40px;
-    line-height: 1.7;
-  }
-
-  /* ROUTE VISUAL */
-  .route-visual {
-    display: flex; align-items: center; gap: 0;
-    margin: 0 auto 44px;
-    position: relative;
-  }
-  .city-badge {
-    background: var(--night-mid);
-    border: 1px solid rgba(245,166,35,0.3);
-    border-radius: 10px;
-    padding: 10px 20px;
-    font-family: 'Sora', sans-serif;
-    font-weight: 700;
-    font-size: 0.95rem;
-    color: var(--white);
-    position: relative;
-    z-index: 2;
-  }
-  .city-badge small {
-    display: block;
-    font-size: 0.65rem;
-    font-weight: 400;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-top: 2px;
-  }
-  .route-line {
-    width: 120px;
-    height: 2px;
-    background: linear-gradient(90deg, rgba(245,166,35,0.4), var(--amber), rgba(245,166,35,0.4));
-    position: relative;
-    overflow: hidden;
-  }
-  .route-line::after {
-    content: '';
-    position: absolute; top: 50%; left: -100%; right: 100%;
-    width: 40%; height: 100%;
-    background: linear-gradient(90deg, transparent, var(--white), transparent);
-    transform: translateY(-50%);
-    animation: travel 2.2s ease-in-out infinite;
-  }
-  @keyframes travel {
-    0% { left: -40%; right: 140%; }
-    100% { left: 140%; right: -40%; }
-  }
-  .route-plane {
-    position: absolute; top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1rem;
-    animation: flyplane 2.2s ease-in-out infinite;
-    z-index: 3;
-  }
-  @keyframes flyplane {
-    0% { left: 10%; opacity: 0; }
-    15% { opacity: 1; }
-    85% { opacity: 1; }
-    100% { left: 90%; opacity: 0; }
-  }
-
-  /* CTA BLOCK */
-  .hero-cta-group {
-    display: flex; flex-direction: column; align-items: center; gap: 14px;
-  }
-  .btn-primary {
-    background: var(--amber);
-    color: var(--night);
-    font-family: 'Sora', sans-serif;
-    font-weight: 700;
-    font-size: 1.1rem;
-    padding: 18px 42px;
-    border-radius: var(--radius);
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    display: inline-flex; align-items: center; gap: 10px;
-    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-    box-shadow: 0 4px 24px rgba(245,166,35,0.35);
-  }
-  .btn-primary:hover {
-    background: var(--amber-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(245,166,35,0.45);
-  }
-  .btn-primary:active { transform: translateY(0); }
-  .btn-whatsapp {
-    background: transparent;
-    color: var(--green);
-    border: 1px solid rgba(34,197,94,0.4);
-    font-family: 'Sora', sans-serif;
-    font-weight: 600;
-    font-size: 0.95rem;
-    padding: 13px 30px;
-    border-radius: var(--radius);
-    text-decoration: none;
-    display: inline-flex; align-items: center; gap: 8px;
-    transition: background 0.2s, border-color 0.2s;
-  }
-  .btn-whatsapp:hover {
-    background: rgba(34,197,94,0.08);
-    border-color: var(--green);
-  }
-  .trust-note {
-    font-size: 0.8rem;
-    color: var(--muted);
-    display: flex; align-items: center; gap: 6px;
-  }
+  /* HERO CTA */
+  .hero-cta-group { display: flex; flex-direction: column; align-items: center; gap: 12px; position: relative; z-index: 1; }
+  .btn-primary { background: var(--amber); color: var(--night); font-family: 'Sora', sans-serif; font-weight: 700; font-size: 1.05rem; padding: 17px 40px; border-radius: var(--radius); text-decoration: none; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 9px; transition: background 0.2s, transform 0.15s, box-shadow 0.2s; box-shadow: 0 4px 24px rgba(245,166,35,0.35); }
+  .btn-primary:hover { background: var(--amber-dark); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(245,166,35,0.45); }
+  .trust-note { font-size: 0.78rem; color: var(--muted); display: flex; align-items: center; gap: 5px; }
   .trust-note::before { content: '✓'; color: var(--green); font-weight: 700; }
 
-  /* STATS BAR */
-  .stats-bar {
-    background: var(--night-mid);
-    border-top: 1px solid rgba(245,166,35,0.1);
-    border-bottom: 1px solid rgba(245,166,35,0.1);
-    padding: 28px 5%;
-    display: flex; justify-content: center; gap: 0;
-  }
-  .stat {
-    flex: 1; max-width: 220px;
-    text-align: center;
-    padding: 0 20px;
-    border-right: 1px solid rgba(255,255,255,0.06);
-  }
+  /* STATS */
+  .stats-bar { background: var(--night-mid); border-top: 1px solid rgba(245,166,35,0.1); border-bottom: 1px solid rgba(245,166,35,0.1); padding: 28px 5%; display: flex; justify-content: center; }
+  .stat { flex: 1; max-width: 200px; text-align: center; padding: 0 16px; border-right: 1px solid rgba(255,255,255,0.06); }
   .stat:last-child { border-right: none; }
-  .stat-num {
-    font-family: 'Sora', sans-serif;
-    font-size: 2rem;
-    font-weight: 800;
-    color: var(--amber);
-    line-height: 1;
-  }
-  .stat-label {
-    font-size: 0.8rem;
-    color: var(--muted);
-    margin-top: 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
+  .stat-num { font-family: 'Sora', sans-serif; font-size: 1.9rem; font-weight: 800; color: var(--amber); line-height: 1; }
+  .stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
 
-  /* SECTION */
-  section { padding: 80px 5%; max-width: 1140px; margin: 0 auto; }
-  .section-label {
-    font-family: 'Sora', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--amber);
-    margin-bottom: 12px;
-  }
-  h2 {
-    font-family: 'Sora', sans-serif;
-    font-size: clamp(1.7rem, 3.5vw, 2.6rem);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    color: var(--white);
-    line-height: 1.15;
-    margin-bottom: 16px;
-  }
-  .section-intro {
-    color: var(--muted);
-    font-size: 1.05rem;
-    max-width: 520px;
-    line-height: 1.7;
-    margin-bottom: 52px;
-  }
+  /* SECTIONS */
+  .section { padding: 80px 5%; max-width: 1140px; margin: 0 auto; }
+  .section-label { font-family: 'Sora', sans-serif; font-size: 0.73rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber); margin-bottom: 10px; }
+  h2 { font-family: 'Sora', sans-serif; font-size: clamp(1.6rem, 3.5vw, 2.5rem); font-weight: 800; letter-spacing: -0.03em; color: var(--white); line-height: 1.15; margin-bottom: 14px; }
+  .section-intro { color: var(--muted); font-size: 1rem; max-width: 500px; line-height: 1.7; margin-bottom: 48px; }
 
-  /* HOW IT WORKS */
-  .steps {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 2px;
-    background: rgba(255,255,255,0.05);
-    border-radius: var(--radius);
-    overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.06);
-  }
-  .step {
-    background: var(--night);
-    padding: 36px 28px;
-    position: relative;
-  }
-  .step-icon {
-    font-size: 2rem;
-    margin-bottom: 16px;
-    display: block;
-  }
-  .step-title {
-    font-family: 'Sora', sans-serif;
-    font-weight: 700;
-    font-size: 1rem;
-    color: var(--white);
-    margin-bottom: 8px;
-  }
-  .step-desc {
-    font-size: 0.875rem;
-    color: var(--muted);
-    line-height: 1.6;
-  }
-  .step-num {
-    position: absolute; top: 28px; right: 24px;
-    font-family: 'Sora', sans-serif;
-    font-size: 3rem;
-    font-weight: 800;
-    color: rgba(245,166,35,0.08);
-    line-height: 1;
-  }
+  /* BOOKING SECTION */
+  .booking-section { background: var(--night-mid); border-top: 1px solid rgba(245,166,35,0.12); border-bottom: 1px solid rgba(245,166,35,0.12); padding: 80px 5%; }
+  .booking-inner { max-width: 820px; margin: 0 auto; }
+  .booking-card { background: var(--night); border: 1px solid rgba(245,166,35,0.2); border-radius: 20px; padding: 48px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
 
-  /* PRICE CARDS */
-  .price-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 16px;
-  }
-  .price-card {
-    background: var(--night-mid);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: var(--radius);
-    padding: 32px;
-    position: relative;
-    transition: border-color 0.2s, transform 0.2s;
-  }
-  .price-card:hover { border-color: rgba(245,166,35,0.3); transform: translateY(-3px); }
-  .price-card.featured {
-    border-color: var(--amber);
-    background: linear-gradient(145deg, #1e2d3d, #1a2a3a);
-  }
-  .featured-tag {
-    position: absolute; top: -12px; left: 24px;
-    background: var(--amber);
-    color: var(--night);
-    font-family: 'Sora', sans-serif;
-    font-weight: 700;
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 4px 12px;
-    border-radius: 20px;
-  }
-  .price-route {
-    font-family: 'Sora', sans-serif;
-    font-weight: 700;
-    font-size: 1rem;
-    color: var(--white);
-    margin-bottom: 4px;
-  }
-  .price-route-detail {
-    font-size: 0.8rem;
-    color: var(--muted);
-    margin-bottom: 24px;
-  }
-  .price-amount {
-    font-family: 'Sora', sans-serif;
-    font-size: 2.6rem;
-    font-weight: 800;
-    color: var(--amber);
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-  .price-amount span {
-    font-size: 1.1rem;
-    font-weight: 600;
-    vertical-align: super;
-    color: var(--amber);
-  }
-  .price-per {
-    font-size: 0.8rem;
-    color: var(--muted);
-    margin-bottom: 24px;
-  }
-  .price-includes {
-    list-style: none;
-    display: flex; flex-direction: column; gap: 8px;
-    margin-bottom: 28px;
-  }
-  .price-includes li {
-    font-size: 0.875rem;
-    color: var(--ice);
-    display: flex; align-items: center; gap: 8px;
-  }
-  .price-includes li::before { content: '✓'; color: var(--green); font-weight: 700; font-size: 0.85rem; }
-  .btn-card {
-    width: 100%;
-    background: var(--amber);
-    color: var(--night);
-    font-family: 'Sora', sans-serif;
-    font-weight: 700;
-    font-size: 0.95rem;
-    padding: 14px;
-    border-radius: 8px;
-    text-decoration: none;
-    text-align: center;
-    display: block;
-    transition: background 0.2s;
-  }
-  .btn-card:hover { background: var(--amber-dark); }
-  .btn-card-outline {
-    background: transparent;
-    border: 1px solid rgba(245,166,35,0.4);
-    color: var(--amber);
-  }
-  .btn-card-outline:hover { background: rgba(245,166,35,0.08); }
+  /* FORM */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label { font-family: 'Sora', sans-serif; font-size: 0.78rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; }
+  .form-group label span { color: var(--amber); }
+  .form-control { background: var(--night-mid); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 13px 16px; color: var(--white); font-family: 'Inter', sans-serif; font-size: 0.95rem; outline: none; transition: border-color 0.2s, box-shadow 0.2s; width: 100%; -webkit-appearance: none; appearance: none; }
+  .form-control:focus { border-color: var(--amber); box-shadow: 0 0 0 3px rgba(245,166,35,0.12); }
+  .form-control::placeholder { color: var(--muted); }
+  .form-control option { background: var(--night-mid); color: var(--white); }
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator { filter: invert(0.6) sepia(1) saturate(3) hue-rotate(10deg); cursor: pointer; }
+  input[type="datetime-local"] { color-scheme: dark; }
+
+  .direction-toggle { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; overflow: hidden; }
+  .dir-btn { padding: 13px; text-align: center; cursor: pointer; font-family: 'Sora', sans-serif; font-size: 0.82rem; font-weight: 600; color: var(--muted); background: var(--night-mid); border: none; border-right: 1px solid rgba(255,255,255,0.1); transition: background 0.2s, color 0.2s; }
+  .dir-btn:last-child { border-right: none; }
+  .dir-btn.active { background: var(--amber); color: var(--night); }
+
+  .price-estimate { background: rgba(245,166,35,0.08); border: 1px solid rgba(245,166,35,0.2); border-radius: 10px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .price-est-label { font-size: 0.85rem; color: var(--muted); }
+  .price-est-val { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--amber); }
+  .price-est-note { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+  .form-divider { grid-column: 1 / -1; border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 4px 0; }
+
+  .btn-submit { width: 100%; background: var(--amber); color: var(--night); font-family: 'Sora', sans-serif; font-weight: 700; font-size: 1.05rem; padding: 17px; border-radius: var(--radius); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s, transform 0.15s, box-shadow 0.2s; box-shadow: 0 4px 20px rgba(245,166,35,0.3); margin-top: 8px; }
+  .btn-submit:hover { background: var(--amber-dark); transform: translateY(-1px); }
+  .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .form-disclaimer { text-align: center; font-size: 0.74rem; color: var(--muted); margin-top: 14px; line-height: 1.5; }
+
+  .spinner { width: 18px; height: 18px; border: 2px solid rgba(13,27,42,0.3); border-top-color: var(--night); border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .field-error { font-size: 0.74rem; color: var(--red); margin-top: 3px; display: none; }
+  .form-control.error { border-color: var(--red); }
+
+  /* THANK YOU PAGE */
+  #thank-you { display: none; min-height: 100vh; align-items: center; justify-content: center; text-align: center; padding: 40px 5%; flex-direction: column; }
+  .ty-icon { width: 80px; height: 80px; border-radius: 50%; background: rgba(34,197,94,0.15); border: 2px solid var(--green); display: flex; align-items: center; justify-content: center; font-size: 2.2rem; margin: 0 auto 28px; animation: popIn 0.5s ease-out; }
+  @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  .ty-title { font-family: 'Sora', sans-serif; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; color: var(--white); margin-bottom: 14px; letter-spacing: -0.02em; }
+  .ty-sub { font-size: 1.05rem; color: var(--muted); max-width: 460px; margin: 0 auto 36px; line-height: 1.7; }
+  .ty-box { background: var(--night-mid); border: 1px solid rgba(245,166,35,0.2); border-radius: 16px; padding: 28px 36px; max-width: 480px; margin: 0 auto 32px; text-align: left; width: 100%; }
+  .ty-box-title { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.82rem; color: var(--amber); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .ty-detail { display: flex; justify-content: space-between; gap: 16px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.875rem; }
+  .ty-detail:last-child { border-bottom: none; }
+  .ty-detail-label { color: var(--muted); flex-shrink: 0; }
+  .ty-detail-val { color: var(--white); font-weight: 600; text-align: right; }
+  .ty-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-ty-wa { background: var(--green); color: #fff; font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.95rem; padding: 14px 28px; border-radius: 10px; text-decoration: none; display: flex; align-items: center; gap: 8px; transition: opacity 0.2s; }
+  .btn-ty-wa:hover { opacity: 0.88; }
+  .btn-ty-back { background: transparent; color: var(--muted); font-family: 'Sora', sans-serif; font-weight: 600; font-size: 0.9rem; padding: 14px 24px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: color 0.2s, border-color 0.2s; text-decoration: none; display: inline-flex; align-items: center; }
+  .btn-ty-back:hover { color: var(--white); border-color: rgba(255,255,255,0.25); }
+
+  /* STEPS */
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2px; background: rgba(255,255,255,0.04); border-radius: var(--radius); overflow: hidden; border: 1px solid rgba(255,255,255,0.06); }
+  .step { background: var(--night); padding: 32px 26px; position: relative; }
+  .step-icon { font-size: 1.8rem; margin-bottom: 14px; display: block; }
+  .step-title { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--white); margin-bottom: 7px; }
+  .step-desc { font-size: 0.835rem; color: var(--muted); line-height: 1.6; }
+  .step-num { position: absolute; top: 24px; right: 20px; font-family: 'Sora', sans-serif; font-size: 2.6rem; font-weight: 800; color: rgba(245,166,35,0.07); line-height: 1; }
 
   /* WHY */
-  .why-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 24px;
-  }
-  .why-card {
-    padding: 28px;
-    background: var(--night-mid);
-    border-radius: var(--radius);
-    border: 1px solid rgba(255,255,255,0.06);
-  }
-  .why-icon {
-    font-size: 1.8rem;
-    margin-bottom: 14px;
-    display: block;
-  }
-  .why-title {
-    font-family: 'Sora', sans-serif;
-    font-weight: 700;
-    font-size: 1rem;
-    color: var(--white);
-    margin-bottom: 8px;
-  }
-  .why-desc {
-    font-size: 0.875rem;
-    color: var(--muted);
-    line-height: 1.6;
-  }
+  .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+  .why-card { padding: 26px; background: var(--night-mid); border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.06); }
+  .why-icon { font-size: 1.7rem; margin-bottom: 12px; display: block; }
+  .why-title { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--white); margin-bottom: 7px; }
+  .why-desc { font-size: 0.835rem; color: var(--muted); line-height: 1.6; }
 
-  /* TESTIMONIALS */
-  .review-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 16px;
-  }
-  .review-card {
-    background: var(--night-mid);
-    border-radius: var(--radius);
-    border: 1px solid rgba(255,255,255,0.06);
-    padding: 28px;
-  }
-  .stars { color: var(--amber); font-size: 1rem; margin-bottom: 12px; letter-spacing: 2px; }
-  .review-text {
-    font-size: 0.9rem;
-    color: var(--ice);
-    line-height: 1.7;
-    margin-bottom: 18px;
-    font-style: italic;
-  }
-  .reviewer {
-    font-family: 'Sora', sans-serif;
-    font-weight: 600;
-    font-size: 0.85rem;
-    color: var(--white);
-  }
-  .reviewer-sub { font-size: 0.75rem; color: var(--muted); font-weight: 400; margin-top: 2px; }
+  /* REVIEWS */
+  .review-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .review-card { background: var(--night-mid); border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.06); padding: 26px; }
+  .stars { color: var(--amber); font-size: 0.95rem; margin-bottom: 10px; letter-spacing: 2px; }
+  .review-text { font-size: 0.875rem; color: var(--ice); line-height: 1.7; margin-bottom: 16px; font-style: italic; }
+  .reviewer { font-family: 'Sora', sans-serif; font-weight: 600; font-size: 0.82rem; color: var(--white); }
+  .reviewer-sub { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
 
   /* FAQ */
   .faq-list { display: flex; flex-direction: column; gap: 2px; }
-  .faq-item {
-    background: var(--night-mid);
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.06);
-  }
-  .faq-q {
-    width: 100%; text-align: left;
-    background: none; border: none;
-    padding: 20px 24px;
-    font-family: 'Sora', sans-serif;
-    font-weight: 600;
-    font-size: 0.95rem;
-    color: var(--white);
-    cursor: pointer;
-    display: flex; justify-content: space-between; align-items: center;
-    gap: 16px;
-    transition: color 0.2s;
-  }
+  .faq-item { background: var(--night-mid); border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); }
+  .faq-q { width: 100%; text-align: left; background: none; border: none; padding: 18px 22px; font-family: 'Sora', sans-serif; font-weight: 600; font-size: 0.92rem; color: var(--white); cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; transition: color 0.2s; }
   .faq-q:hover { color: var(--amber); }
-  .faq-q .icon {
-    color: var(--amber);
-    font-size: 1.2rem;
-    flex-shrink: 0;
-    transition: transform 0.2s;
-    font-style: normal;
-  }
-  .faq-item.open .faq-q .icon { transform: rotate(45deg); }
-  .faq-a {
-    max-height: 0; overflow: hidden;
-    transition: max-height 0.3s ease, padding 0.3s ease;
-    padding: 0 24px;
-    font-size: 0.875rem;
-    color: var(--muted);
-    line-height: 1.7;
-  }
-  .faq-item.open .faq-a { max-height: 200px; padding: 0 24px 20px; }
+  .faq-icon { color: var(--amber); font-size: 1.3rem; flex-shrink: 0; transition: transform 0.2s; line-height: 1; }
+  .faq-item.open .faq-icon { transform: rotate(45deg); }
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; padding: 0 22px; font-size: 0.855rem; color: var(--muted); line-height: 1.7; }
+  .faq-item.open .faq-a { max-height: 200px; padding: 0 22px 18px; }
 
   /* FINAL CTA */
-  .final-cta {
-    background: linear-gradient(135deg, var(--night-mid), #162030);
-    border: 1px solid rgba(245,166,35,0.2);
-    border-radius: 20px;
-    padding: 72px 40px;
-    text-align: center;
-    max-width: 780px;
-    margin: 0 auto 80px;
-  }
-  .final-cta h2 { margin-bottom: 12px; }
-  .final-cta .section-intro { margin: 0 auto 36px; }
+  .final-cta { background: linear-gradient(135deg, var(--night-mid), #162030); border: 1px solid rgba(245,166,35,0.2); border-radius: 20px; padding: 64px 40px; text-align: center; max-width: 760px; margin: 0 auto 80px; }
+  .final-cta h2 { margin-bottom: 10px; }
+  .final-cta .section-intro { margin: 0 auto 32px; }
+  .cta-btn-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-call { display: flex; align-items: center; gap: 8px; color: var(--green); font-family: 'Sora', sans-serif; font-weight: 600; font-size: 0.95rem; text-decoration: none; border: 1px solid rgba(34,197,94,0.3); padding: 12px 24px; border-radius: 10px; transition: background 0.2s; }
+  .btn-call:hover { background: rgba(34,197,94,0.08); }
 
   /* FOOTER */
-  footer {
-    border-top: 1px solid rgba(255,255,255,0.06);
-    padding: 32px 5%;
-    text-align: center;
-    font-size: 0.8rem;
-    color: var(--muted);
-  }
+  footer { border-top: 1px solid rgba(255,255,255,0.06); padding: 28px 5%; text-align: center; font-size: 0.78rem; color: var(--muted); }
   footer a { color: var(--muted); text-decoration: none; }
   footer a:hover { color: var(--amber); }
 
-  /* STICKY MOBILE CTA */
-  .sticky-bar {
-    display: none;
-    position: fixed; bottom: 0; left: 0; right: 0; z-index: 99;
-    background: var(--night-mid);
-    border-top: 1px solid rgba(245,166,35,0.25);
-    padding: 12px 20px;
-    gap: 10px;
-  }
-  .sticky-bar a {
-    flex: 1;
-    text-align: center;
-    font-family: 'Sora', sans-serif;
-    font-weight: 700;
-    font-size: 0.9rem;
-    padding: 13px;
-    border-radius: 8px;
-    text-decoration: none;
-  }
-  .sticky-bar .s-primary { background: var(--amber); color: var(--night); }
-  .sticky-bar .s-wa { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  /* STICKY MOBILE */
+  .sticky-bar { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 99; background: var(--night-mid); border-top: 1px solid rgba(245,166,35,0.2); padding: 10px 16px; gap: 10px; }
+  .sticky-bar a { flex: 1; text-align: center; font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.875rem; padding: 12px; border-radius: 8px; text-decoration: none; }
+  .s-call { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  .s-book { background: var(--amber); color: var(--night); }
 
-  @media (max-width: 700px) {
+  @media (max-width: 680px) {
     .sticky-bar { display: flex; }
-    body { padding-bottom: 72px; }
-    .stats-bar { flex-wrap: wrap; gap: 0; }
-    .stat { min-width: 50%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); padding: 20px; }
-    .stat:last-child, .stat:nth-last-child(2):nth-child(odd) { border-bottom: none; }
-    .route-line { width: 60px; }
-    h1 { font-size: 2rem; }
-    .final-cta { padding: 48px 24px; }
+    body { padding-bottom: 68px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: 1; }
+    .booking-card { padding: 28px 18px; }
+    .stats-bar { flex-wrap: wrap; }
+    .stat { min-width: 50%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); padding: 18px; }
+    .nav-call .nav-call-text { display: none; }
+    .ty-box { padding: 22px 18px; }
+    .final-cta { padding: 44px 24px; }
   }
-
   @media (prefers-reduced-motion: reduce) {
     .route-line::after, .route-plane { animation: none; }
   }
@@ -584,274 +206,406 @@
 </head>
 <body>
 
-<!-- NAV -->
+<!-- ═══════════════════════════════════════════════════════════════ MAIN PAGE -->
+<div id="main-page">
+
 <nav>
   <a href="#" class="logo">Oliver <span>fährt dich</span></a>
-  <a href="https://wa.me/43IHRE_NUMMER?text=Ich%20möchte%20einen%20Transfer%20Wien%20–%20Bratislava%20buchen" class="nav-cta" target="_blank" rel="noopener">Jetzt buchen →</a>
+  <div class="nav-right">
+    <a href="tel:+4369919567596" class="nav-call">📞 <span class="nav-call-text">+43 699 19567596</span></a>
+    <a href="#buchen" class="nav-cta">Jetzt buchen</a>
+  </div>
 </nav>
 
 <!-- HERO -->
 <div class="hero">
   <div class="hero-bg"></div>
-  <div class="hero-eyebrow">Transfer Wien ↔ Bratislava</div>
-  <h1>Fliegen ab Bratislava —<br>Wir bringen Sie <em>hin und zurück.</em></h1>
-  <p class="hero-sub">Stressfreier Tür-zu-Tür-Transfer vom 1. bis 23. Bezirk direkt zum Flughafen BTS. Festpreis, keine Überraschungen.</p>
-
+  <div class="hero-eyebrow">Transfer ganz Österreich ↔ Bratislava Airport</div>
+  <h1>Fliegen ab Bratislava —<br>Oliver bringt Sie <em>hin und zurück.</em></h1>
+  <p class="hero-sub">Billiger fliegen ab BTS, ohne Parkstress. Tür-zu-Tür aus ganz Österreich. Festpreis, 24/7.</p>
   <div class="route-visual">
-    <div class="city-badge">Wien<small>Ihr Zuhause</small></div>
-    <div class="route-line">
-      <div class="route-plane">✈</div>
-    </div>
+    <div class="city-badge">🇦🇹 Österreich<small>Ihr Zuhause</small></div>
+    <div class="route-line"><div class="route-plane">✈</div></div>
     <div class="city-badge">BTS<small>Bratislava Airport</small></div>
   </div>
-
   <div class="hero-cta-group">
-    <a href="https://wa.me/43IHRE_NUMMER?text=Ich%20möchte%20einen%20Transfer%20Wien%20–%20Bratislava%20buchen" class="btn-primary" target="_blank" rel="noopener">
-      ✈ Transfer jetzt anfragen
-    </a>
-    <a href="tel:+43IHRE_NUMMER" class="btn-whatsapp">
-      📞 Kurz anrufen
-    </a>
-    <p class="trust-note">Festpreis — keine versteckten Kosten</p>
+    <a href="#buchen" class="btn-primary">✈ Transfer jetzt buchen</a>
+    <p class="trust-note">Festpreis · keine versteckten Kosten · kostenlose Stornierung</p>
   </div>
 </div>
 
-<!-- STATS BAR -->
+<!-- STATS -->
 <div class="stats-bar">
-  <div class="stat">
-    <div class="stat-num">~70<span style="font-size:1.1rem">km</span></div>
-    <div class="stat-label">Wien → BTS</div>
-  </div>
-  <div class="stat">
-    <div class="stat-num">~55<span style="font-size:1.1rem">min</span></div>
-    <div class="stat-label">Fahrzeit</div>
-  </div>
-  <div class="stat">
-    <div class="stat-num">24/7</div>
-    <div class="stat-label">Verfügbar</div>
-  </div>
-  <div class="stat">
-    <div class="stat-num">Fix</div>
-    <div class="stat-label">Preis garantiert</div>
-  </div>
+  <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Verfügbar</div></div>
+  <div class="stat"><div class="stat-num">Fix</div><div class="stat-label">Preis garantiert</div></div>
+  <div class="stat"><div class="stat-num">Direkt</div><div class="stat-label">Tür zu Tür</div></div>
+  <div class="stat"><div class="stat-num">AT</div><div class="stat-label">Ganz Österreich</div></div>
 </div>
 
 <!-- HOW IT WORKS -->
-<section>
-  <div class="section-label">Ablauf</div>
+<div class="section">
+  <div class="section-label">So funktioniert's</div>
   <h2>Einfacher geht's nicht.</h2>
-  <p class="section-intro">Kein Parkhaus suchen, kein Umsteigen. Sie buchen, wir holen Sie ab.</p>
-
+  <p class="section-intro">Formular ausfüllen, Bestätigung erhalten, entspannt einsteigen.</p>
   <div class="steps">
-    <div class="step">
-      <span class="step-icon">💬</span>
-      <div class="step-title">Anfrage senden</div>
-      <p class="step-desc">Schreiben Sie uns kurz Datum, Uhrzeit und Ihre Adresse in Wien. Per WhatsApp oder Telefon.</p>
-      <div class="step-num">1</div>
+    <div class="step"><span class="step-icon">📋</span><div class="step-title">Online buchen</div><p class="step-desc">Formular ausfüllen — Adresse, Datum, Uhrzeit. Dauert 60 Sekunden.</p><div class="step-num">1</div></div>
+    <div class="step"><span class="step-icon">✅</span><div class="step-title">Bestätigung erhalten</div><p class="step-desc">Oliver meldet sich innerhalb weniger Minuten mit Festpreis und Bestätigung.</p><div class="step-num">2</div></div>
+    <div class="step"><span class="step-icon">🚗</span><div class="step-title">Abgeholt werden</div><p class="step-desc">Pünktliche Abholung direkt an Ihrer Haustür — bequem und stressfrei.</p><div class="step-num">3</div></div>
+    <div class="step"><span class="step-icon">✈</span><div class="step-title">Direkt zum Gate</div><p class="step-desc">Keine Umwege. Rückflug? Oliver holt Sie am Terminal ab.</p><div class="step-num">4</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ BOOKING FORM -->
+<div class="booking-section" id="buchen">
+  <div class="booking-inner">
+    <div style="text-align:center; margin-bottom: 36px;">
+      <div class="section-label" style="display:flex; justify-content:center;">Buchung</div>
+      <h2>Transfer buchen</h2>
+      <p style="color:var(--muted); font-size:0.95rem; margin-top: 8px;">Alle Felder ausfüllen — Oliver meldet sich umgehend mit Bestätigung.</p>
     </div>
-    <div class="step">
-      <span class="step-icon">✅</span>
-      <div class="step-title">Bestätigung erhalten</div>
-      <p class="step-desc">Sie erhalten den Festpreis und Ihre Abholzeit — innerhalb weniger Minuten.</p>
-      <div class="step-num">2</div>
-    </div>
-    <div class="step">
-      <span class="step-icon">🚗</span>
-      <div class="step-title">Abgeholt werden</div>
-      <p class="step-desc">Unser Fahrer holt Sie pünktlich an Ihrer Haustür ab. Komfortabel, entspannt, ohne Stress.</p>
-      <div class="step-num">3</div>
-    </div>
-    <div class="step">
-      <span class="step-icon">✈</span>
-      <div class="step-title">Direkt zum Gate</div>
-      <p class="step-desc">Wir fahren Sie direkt zum Terminal. Keine Umwege. Rückflug? Wir holen Sie natürlich auch wieder ab.</p>
-      <div class="step-num">4</div>
+
+    <div class="booking-card">
+      <form id="booking-form" novalidate>
+
+        <!-- DIRECTION -->
+        <div class="form-group full" style="margin-bottom: 24px;">
+          <label>Fahrtrichtung <span>*</span></label>
+          <div class="direction-toggle">
+            <button type="button" class="dir-btn active" onclick="setDir('hin',this)">🇦🇹 → ✈&nbsp; Hinfahrt (AT → BTS)</button>
+            <button type="button" class="dir-btn" onclick="setDir('rueck',this)">✈ → 🇦🇹&nbsp; Rückfahrt (BTS → AT)</button>
+          </div>
+          <input type="hidden" id="direction" value="Hinfahrt AT → BTS">
+        </div>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>Vor- &amp; Nachname <span>*</span></label>
+            <input type="text" class="form-control" id="f-name" placeholder="Maria Mustermann" autocomplete="name">
+            <div class="field-error" id="err-name">Bitte Namen eingeben.</div>
+          </div>
+
+          <div class="form-group">
+            <label>Anzahl Personen <span>*</span></label>
+            <select class="form-control" id="f-personen">
+              <option value="">Bitte wählen…</option>
+              <option value="1 Person">1 Person</option>
+              <option value="2 Personen">2 Personen</option>
+              <option value="3 Personen">3 Personen</option>
+              <option value="4 Personen">4 Personen</option>
+              <option value="5+ Personen">5+ Personen (auf Anfrage)</option>
+            </select>
+            <div class="field-error" id="err-personen">Bitte Personenanzahl wählen.</div>
+          </div>
+
+          <div class="form-group full">
+            <label>Abholadresse (Straße, PLZ, Ort) <span>*</span></label>
+            <input type="text" class="form-control" id="f-adresse" placeholder="Musterstraße 1, 1010 Wien" autocomplete="street-address">
+            <div class="field-error" id="err-adresse">Bitte vollständige Adresse eingeben.</div>
+          </div>
+
+          <div class="form-group">
+            <label id="label-von">Abflugdatum &amp; Abholzeit <span>*</span></label>
+            <input type="datetime-local" class="form-control" id="f-von">
+            <div class="field-error" id="err-von">Bitte Datum und Uhrzeit wählen.</div>
+          </div>
+
+          <div class="form-group" id="group-bis">
+            <label id="label-bis">Rückflug Ankunft (optional)</label>
+            <input type="datetime-local" class="form-control" id="f-bis">
+          </div>
+
+          <hr class="form-divider">
+
+          <div class="form-group">
+            <label>Telefonnummer <span>*</span></label>
+            <input type="tel" class="form-control" id="f-tel" placeholder="+43 699 1234567" autocomplete="tel">
+            <div class="field-error" id="err-tel">Bitte Telefonnummer eingeben.</div>
+          </div>
+
+          <div class="form-group">
+            <label>E-Mail <span>*</span></label>
+            <input type="email" class="form-control" id="f-email" placeholder="maria@beispiel.at" autocomplete="email">
+            <div class="field-error" id="err-email">Bitte gültige E-Mail eingeben.</div>
+          </div>
+
+          <div class="form-group">
+            <label>Gepäck</label>
+            <select class="form-control" id="f-gepaeck">
+              <option value="Normal (1-2 Koffer)">Normal (1–2 Koffer)</option>
+              <option value="Viel (3+ Koffer)">Viel (3+ Koffer)</option>
+              <option value="Nur Handgepäck">Nur Handgepäck</option>
+              <option value="Sperrgepäck / Ski">Sperrgepäck / Ski</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Anmerkungen</label>
+            <input type="text" class="form-control" id="f-notiz" placeholder="z.B. Kindersitz, Rollstuhl, Flugnummer…">
+          </div>
+
+          <!-- PRICE ESTIMATE -->
+          <div class="form-group full">
+            <div class="price-estimate">
+              <div>
+                <div class="price-est-label">Geschätzter Festpreis</div>
+                <div class="price-est-note">Wird von Oliver vor der Fahrt bestätigt</div>
+              </div>
+              <div id="price-display" class="price-est-val">auf Anfrage</div>
+            </div>
+          </div>
+
+          <!-- SUBMIT -->
+          <div class="form-group full">
+            <button type="submit" class="btn-submit" id="submit-btn">
+              <span id="btn-text">✈ Buchung absenden</span>
+              <div class="spinner" id="btn-spinner"></div>
+            </button>
+            <p class="form-disclaimer">Ihre Daten werden ausschließlich für die Buchungsabwicklung verwendet und nicht an Dritte weitergegeben.</p>
+          </div>
+
+        </div>
+      </form>
     </div>
   </div>
-</section>
-
-<!-- PRICING -->
-<section id="preise">
-  <div class="section-label">Preise</div>
-  <h2>Klare Preise. Immer.</h2>
-  <p class="section-intro">Was Sie sehen, zahlen Sie. Kein Taxameter, keine Nachtzuschläge, keine Überraschungen.</p>
-
-  <div class="price-grid">
-    <div class="price-card">
-      <div class="price-route">Wien → Bratislava Airport</div>
-      <div class="price-route-detail">Hinfahrt — 1. bis 23. Bezirk</div>
-      <div class="price-amount"><span>ab</span>79<span>€</span></div>
-      <div class="price-per">pro Fahrt (bis 4 Personen)</div>
-      <ul class="price-includes">
-        <li>Tür zu Tür Abholung</li>
-        <li>Gepäck inklusive</li>
-        <li>Festpreis garantiert</li>
-        <li>Kindersessel auf Anfrage</li>
-      </ul>
-      <a href="https://wa.me/43IHRE_NUMMER?text=Hinfahrt%20Wien%20→%20Bratislava" class="btn-card btn-card-outline" target="_blank" rel="noopener">Hinfahrt anfragen</a>
-    </div>
-
-    <div class="price-card featured">
-      <div class="featured-tag">Beliebt</div>
-      <div class="price-route">Hin + Rückflug</div>
-      <div class="price-route-detail">Wien ↔ Bratislava Airport</div>
-      <div class="price-amount"><span>ab</span>149<span>€</span></div>
-      <div class="price-per">beide Fahrten zusammen</div>
-      <ul class="price-includes">
-        <li>Hinfahrt + Rückabholung</li>
-        <li>Direkt am Ausgang warten</li>
-        <li>Flugverfolgung inklusive</li>
-        <li>Flexible Rückkehrzeiten</li>
-      </ul>
-      <a href="https://wa.me/43IHRE_NUMMER?text=Hin-%20und%20Rücktransfer%20Wien%20↔%20Bratislava" class="btn-card" target="_blank" rel="noopener">Paket anfragen</a>
-    </div>
-
-    <div class="price-card">
-      <div class="price-route">Bratislava Airport → Wien</div>
-      <div class="price-route-detail">Rückfahrt — direkt heim</div>
-      <div class="price-amount"><span>ab</span>79<span>€</span></div>
-      <div class="price-per">pro Fahrt (bis 4 Personen)</div>
-      <ul class="price-includes">
-        <li>Abholung direkt am Terminal</li>
-        <li>Flug wird verfolgt</li>
-        <li>Wartezeit inklusive</li>
-        <li>Kreditkarte möglich</li>
-      </ul>
-      <a href="https://wa.me/43IHRE_NUMMER?text=Rückfahrt%20Bratislava%20→%20Wien" class="btn-card btn-card-outline" target="_blank" rel="noopener">Rückfahrt anfragen</a>
-    </div>
-  </div>
-</section>
+</div>
 
 <!-- WHY -->
-<section>
-  <div class="section-label">Warum Oliver fährt dich</div>
-  <h2>Der schlauere Weg<br>von Wien nach BTS.</h2>
-  <p class="section-intro">Bratislava ist günstiger als Wien-Schwechat. Wir machen den Transfer genauso günstig — und stressfrei.</p>
-
+<div class="section">
+  <div class="section-label">Warum Oliver</div>
+  <h2>Der smarte Weg<br>zum Flughafen BTS.</h2>
+  <p class="section-intro">Billiger fliegen ab Bratislava — ohne den Transfer-Stress mitzubezahlen.</p>
   <div class="why-grid">
-    <div class="why-card">
-      <span class="why-icon">⏰</span>
-      <div class="why-title">Pünktlichkeit ist Pflicht</div>
-      <p class="why-desc">Wir tracken Ihren Flug und passen die Abholzeit automatisch an. Verspätung? Kein Problem.</p>
-    </div>
-    <div class="why-card">
-      <span class="why-icon">💶</span>
-      <div class="why-title">Festpreis — keine Taxiuhr</div>
-      <p class="why-desc">Stau auf der A4? Ihr Preis bleibt gleich. Was wir nennen, das zahlen Sie.</p>
-    </div>
-    <div class="why-card">
-      <span class="why-icon">🛄</span>
-      <div class="why-title">Viel Gepäck? Kein Problem</div>
-      <p class="why-desc">Koffer, Ski, Kinderwagen — wir planen das ein. Einfach beim Buchen mitteilen.</p>
-    </div>
-    <div class="why-card">
-      <span class="why-icon">🌙</span>
-      <div class="why-title">Nachts und frühmorgens</div>
-      <p class="why-desc">Frühflug um 6:00 Uhr? Rückflug um Mitternacht? Wir fahren — 365 Tage im Jahr.</p>
-    </div>
-    <div class="why-card">
-      <span class="why-icon">🤝</span>
-      <div class="why-title">Lokales Wiener Unternehmen</div>
-      <p class="why-desc">Kein anonymes Portal. Sie buchen direkt bei uns — und sprechen mit echten Menschen.</p>
-    </div>
-    <div class="why-card">
-      <span class="why-icon">🔄</span>
-      <div class="why-title">Storno ohne Stress</div>
-      <p class="why-desc">Pläne ändern sich. Kostenloses Stornieren bis 24 Stunden vor der Fahrt.</p>
-    </div>
+    <div class="why-card"><span class="why-icon">⏰</span><div class="why-title">Pünktlichkeit garantiert</div><p class="why-desc">Oliver trackt Ihren Flug in Echtzeit und passt die Abholzeit bei Verspätungen automatisch an.</p></div>
+    <div class="why-card"><span class="why-icon">💶</span><div class="why-title">Festpreis — keine Taxiuhr</div><p class="why-desc">Stau auf der Autobahn? Ihr Preis bleibt gleich. Was vereinbart wird, das zahlen Sie.</p></div>
+    <div class="why-card"><span class="why-icon">🇦🇹</span><div class="why-title">Aus ganz Österreich</div><p class="why-desc">Wien, Graz, Linz, Salzburg, Innsbruck — Oliver holt Sie ab, egal wo Sie starten.</p></div>
+    <div class="why-card"><span class="why-icon">🌙</span><div class="why-title">24/7 — auch frühmorgens</div><p class="why-desc">Frühflug um 5 Uhr? Rückflug nach Mitternacht? Kein Problem — 365 Tage im Jahr.</p></div>
+    <div class="why-card"><span class="why-icon">🛄</span><div class="why-title">Viel Gepäck? Kein Problem</div><p class="why-desc">Koffer, Ski, Kinderwagen — einfach beim Buchen angeben. Oliver plant das ein.</p></div>
+    <div class="why-card"><span class="why-icon">🔄</span><div class="why-title">Kostenlos stornieren</div><p class="why-desc">Pläne ändern sich. Kostenlose Stornierung bis 24 Stunden vor der Fahrt.</p></div>
   </div>
-</section>
+</div>
 
-<!-- TESTIMONIALS -->
-<section>
+<!-- REVIEWS -->
+<div class="section">
   <div class="section-label">Kundenstimmen</div>
-  <h2>Was Wiener sagen,<br>die schlau fliegen.</h2>
+  <h2>Was Österreicher sagen,<br>die schlau fliegen.</h2>
   <br>
   <div class="review-grid">
-    <div class="review-card">
-      <div class="stars">★★★★★</div>
-      <p class="review-text">„Habe über Bratislava 180€ gespart. Der Transfer war trotzdem bequemer als ein Parkhaus in Schwechat. Gibt's das wirklich?"</p>
-      <div class="reviewer">Markus T.</div>
-      <div class="reviewer-sub">1070 Wien, Ryanair-Stammkunde</div>
-    </div>
-    <div class="review-card">
-      <div class="stars">★★★★★</div>
-      <p class="review-text">„Abholung um 4:30 Uhr morgens — pünktlich auf die Minute. Fahrer war freundlich, Auto sauber. So geht Service."</p>
-      <div class="reviewer">Sandra K.</div>
-      <div class="reviewer-sub">1090 Wien, Familienurlaub</div>
-    </div>
-    <div class="review-card">
-      <div class="stars">★★★★★</div>
-      <p class="review-text">„Rückflug hatte 2 Stunden Verspätung. Der Fahrer hat gewartet, ohne extra zu verrechnen. Wirklich verlässlich."</p>
-      <div class="reviewer">Thomas B.</div>
-      <div class="reviewer-sub">1130 Wien, Geschäftsreisender</div>
-    </div>
+    <div class="review-card"><div class="stars">★★★★★</div><p class="review-text">„Habe über Bratislava 200€ gespart. Der Transfer mit Oliver war trotzdem komfortabler als jeder Parkplatz in Schwechat."</p><div class="reviewer">Markus T.</div><div class="reviewer-sub">Wien, Ryanair-Stammkunde</div></div>
+    <div class="review-card"><div class="stars">★★★★★</div><p class="review-text">„Abholung um 4:30 Uhr — pünktlich auf die Minute. Freundlicher Fahrer, sauberes Auto. Wir buchen nur noch so."</p><div class="reviewer">Sandra K.</div><div class="reviewer-sub">Wien, Familienurlaub</div></div>
+    <div class="review-card"><div class="stars">★★★★★</div><p class="review-text">„Rückflug hatte 2 Stunden Verspätung. Oliver hat gewartet, ohne extra zu verrechnen. Absolut verlässlich."</p><div class="reviewer">Thomas B.</div><div class="reviewer-sub">Niederösterreich, Geschäftsreisender</div></div>
   </div>
-</section>
+</div>
 
 <!-- FAQ -->
-<section>
-  <div class="section-label">Häufige Fragen</div>
-  <h2>Noch Fragen?</h2>
-  <p class="section-intro" style="margin-bottom: 36px;">Die wichtigsten Antworten — schnell und ehrlich.</p>
-
+<div class="section">
+  <div class="section-label">FAQ</div>
+  <h2>Häufige Fragen</h2>
+  <p class="section-intro" style="margin-bottom:32px;">Schnell und ehrlich beantwortet.</p>
   <div class="faq-list">
-    <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">Wie lange dauert die Fahrt von Wien nach Bratislava Airport? <em class="icon">+</em></button>
-      <div class="faq-a">Die Fahrt dauert je nach Verkehr und Abholort in Wien etwa 50–70 Minuten. Wir planen die Abholzeit so, dass Sie mindestens 2 Stunden vor dem Abflug am Terminal sind.</div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">Was, wenn mein Rückflug Verspätung hat? <em class="icon">+</em></button>
-      <div class="faq-a">Wir tracken Ihren Flug in Echtzeit. Wartezeit bei normalen Verspätungen ist im Preis inkludiert. Bei sehr langen Delays nehmen wir kurz Kontakt auf — kein Stress für Sie.</div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">Wie viele Personen passen ins Fahrzeug? <em class="icon">+</em></button>
-      <div class="faq-a">Standardmäßig fahren wir bis zu 4 Personen plus Gepäck. Für größere Gruppen oder viel Gepäck einfach beim Buchen angeben — wir finden eine passende Lösung.</div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">Kann ich mit Kreditkarte zahlen? <em class="icon">+</em></button>
-      <div class="faq-a">Ja. Zahlung ist bar oder per Kreditkarte direkt beim Fahrer möglich. Bei Vorauszahlung ist auch Banküberweisung möglich.</div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">Fahrt ihr auch aus dem Umland von Wien? <em class="icon">+</em></button>
-      <div class="faq-a">Ja, auf Anfrage auch aus dem Wiener Umland (z.B. Baden, Mödling, Klosterneuburg). Preis auf Anfrage — einfach kurz fragen.</div>
-    </div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Fahrt ihr wirklich aus ganz Österreich? <span class="faq-icon">+</span></button><div class="faq-a">Ja. Egal ob Wien, Graz, Linz, Salzburg oder Innsbruck — Oliver holt Sie ab. Der Preis richtet sich nach der Entfernung und wird vor der Buchung fix bestätigt.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Was, wenn mein Rückflug Verspätung hat? <span class="faq-icon">+</span></button><div class="faq-a">Oliver trackt Ihren Flug in Echtzeit. Wartezeit bei normalen Verspätungen ist inklusive. Bei sehr langen Verzögerungen wird kurz Kontakt aufgenommen.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Wie viele Personen passen ins Fahrzeug? <span class="faq-icon">+</span></button><div class="faq-a">Standard bis 4 Personen plus Gepäck. Für größere Gruppen einfach bei der Buchung vermerken — Oliver findet eine Lösung.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Wann erhalte ich eine Buchungsbestätigung? <span class="faq-icon">+</span></button><div class="faq-a">In der Regel innerhalb von 15–30 Minuten. Oliver kontaktiert Sie per Telefon oder WhatsApp mit dem Festpreis.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Wie wird bezahlt? <span class="faq-icon">+</span></button><div class="faq-a">Bar oder Kreditkarte direkt beim Fahrer. Vorauszahlung per Banküberweisung ist ebenfalls möglich.</div></div>
   </div>
-</section>
+</div>
 
 <!-- FINAL CTA -->
-<section style="padding: 0 5% 80px;">
+<div class="section" style="padding-top: 0;">
   <div class="final-cta">
     <div class="section-label">Bereit?</div>
     <h2>Ihr nächster Flug ab BTS —<br>ohne Stress.</h2>
-    <p class="section-intro">Schreiben Sie uns jetzt einfach Datum und Adresse. Wir melden uns innerhalb von Minuten mit Ihrem Festpreis.</p>
-    <div class="hero-cta-group">
-      <a href="https://wa.me/43IHRE_NUMMER?text=Ich%20möchte%20einen%20Transfer%20Wien%20↔%20Bratislava%20buchen" class="btn-primary" target="_blank" rel="noopener">
-        💬 WhatsApp — jetzt anfragen
-      </a>
-      <a href="tel:+43IHRE_NUMMER" class="btn-whatsapp">📞 Anrufen</a>
+    <p class="section-intro">Jetzt buchen oder direkt anrufen. Oliver meldet sich sofort.</p>
+    <div class="cta-btn-group">
+      <a href="#buchen" class="btn-primary">✈ Jetzt online buchen</a>
+      <a href="tel:+4369919567596" class="btn-call">📞 +43 699 19567596</a>
     </div>
   </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <p>© 2025 Oliver fährt dich · <a href="#">Datenschutz</a> · <a href="#">Impressum</a> · Wien, Österreich</p>
-</footer>
-
-<!-- STICKY MOBILE BAR -->
-<div class="sticky-bar">
-  <a href="tel:+43IHRE_NUMMER" class="s-wa">📞 Anrufen</a>
-  <a href="https://wa.me/43IHRE_NUMMER?text=Transfer%20Wien%20↔%20Bratislava" class="s-primary" target="_blank" rel="noopener">WhatsApp →</a>
 </div>
 
+<footer>
+  <p>© 2025 Oliver fährt dich · <a href="#">Datenschutz</a> · <a href="#">Impressum</a> · Österreich</p>
+</footer>
+
+<div class="sticky-bar">
+  <a href="tel:+4369919567596" class="s-call">📞 Anrufen</a>
+  <a href="#buchen" class="s-book">✈ Jetzt buchen</a>
+</div>
+
+</div><!-- /#main-page -->
+
+<!-- ══════════════════════════════════════════════════════════ THANK YOU PAGE -->
+<div id="thank-you">
+  <div class="ty-icon">✓</div>
+  <h2 class="ty-title">Buchung eingegangen!</h2>
+  <p class="ty-sub">Oliver hat Ihre Anfrage erhalten und meldet sich innerhalb von 15–30 Minuten mit Bestätigung und Festpreis.</p>
+  <div class="ty-box">
+    <div class="ty-box-title">Ihre Buchungsdetails</div>
+    <div class="ty-detail"><span class="ty-detail-label">Name</span><span class="ty-detail-val" id="ty-name">—</span></div>
+    <div class="ty-detail"><span class="ty-detail-label">Richtung</span><span class="ty-detail-val" id="ty-dir">—</span></div>
+    <div class="ty-detail"><span class="ty-detail-label">Abholung</span><span class="ty-detail-val" id="ty-adresse">—</span></div>
+    <div class="ty-detail"><span class="ty-detail-label">Datum &amp; Zeit</span><span class="ty-detail-val" id="ty-von">—</span></div>
+    <div class="ty-detail" id="ty-bis-row" style="display:none"><span class="ty-detail-label">Rückflug</span><span class="ty-detail-val" id="ty-bis">—</span></div>
+    <div class="ty-detail"><span class="ty-detail-label">Personen</span><span class="ty-detail-val" id="ty-personen">—</span></div>
+    <div class="ty-detail"><span class="ty-detail-label">Kontakt</span><span class="ty-detail-val" id="ty-kontakt">—</span></div>
+    <div class="ty-detail"><span class="ty-detail-label">Preis (Schätzung)</span><span class="ty-detail-val" id="ty-preis">—</span></div>
+  </div>
+  <div class="ty-actions">
+    <a id="ty-wa-btn" href="#" class="btn-ty-wa" target="_blank" rel="noopener">💬 Auf WhatsApp schreiben</a>
+    <a href="#" class="btn-ty-back" onclick="resetForm(); return false;">← Neue Buchung</a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ SCRIPT -->
 <script>
-  function toggleFaq(btn) {
-    const item = btn.closest('.faq-item');
-    const isOpen = item.classList.contains('open');
-    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-    if (!isOpen) item.classList.add('open');
+// ─── CONFIG — NACH APPS SCRIPT DEPLOYMENT EINTRAGEN ─────────────────────────
+const APPS_SCRIPT_URL = 'DEINE_APPS_SCRIPT_URL_HIER';
+// ────────────────────────────────────────────────────────────────────────────
+
+function setDir(dir, btn) {
+  document.querySelectorAll('.dir-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('direction').value = dir === 'hin' ? 'Hinfahrt AT → BTS' : 'Rückfahrt BTS → AT';
+  document.getElementById('label-von').innerHTML = dir === 'hin'
+    ? 'Abflugdatum &amp; Abholzeit <span>*</span>'
+    : 'Ankunftsdatum &amp; Abholzeit <span>*</span>';
+  document.getElementById('label-bis').textContent = dir === 'hin' ? 'Rückflug Ankunft (optional)' : 'Nächster Hinflug (optional)';
+  updatePrice();
+}
+
+function updatePrice() {
+  const adr = document.getElementById('f-adresse').value.toLowerCase();
+  const pers = document.getElementById('f-personen').value;
+  const rueck = document.getElementById('f-bis').value;
+  const el = document.getElementById('price-display');
+  if (!adr || !pers) { el.textContent = 'auf Anfrage'; return; }
+  let base = 79;
+  if (/graz|steiermark/.test(adr)) base = 149;
+  else if (/linz|oberösterreich/.test(adr)) base = 169;
+  else if (/salzburg/.test(adr)) base = 199;
+  else if (/innsbruck|tirol/.test(adr)) base = 249;
+  else if (/klagenfurt|kärnten/.test(adr)) base = 189;
+  else if (/st\.?\s*pölten|niederösterreich/.test(adr)) base = 99;
+  else if (/burgenland/.test(adr)) base = 89;
+  if (rueck) base = Math.round(base * 1.8);
+  el.textContent = 'ab ' + base + ' €';
+}
+
+document.getElementById('f-personen').addEventListener('change', updatePrice);
+document.getElementById('f-adresse').addEventListener('input', updatePrice);
+document.getElementById('f-bis').addEventListener('change', updatePrice);
+
+// Set minimum datetime to 2 hours from now
+(function() {
+  const now = new Date(Date.now() + 2 * 3600000);
+  const pad = n => String(n).padStart(2, '0');
+  const min = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  document.getElementById('f-von').min = min;
+  document.getElementById('f-bis').min = min;
+})();
+
+function validate() {
+  let ok = true;
+  const checks = [
+    { id: 'f-name',     err: 'err-name',     fn: v => v.trim().length > 1 },
+    { id: 'f-personen', err: 'err-personen', fn: v => v !== '' },
+    { id: 'f-adresse',  err: 'err-adresse',  fn: v => v.trim().length > 4 },
+    { id: 'f-von',      err: 'err-von',      fn: v => v !== '' },
+    { id: 'f-tel',      err: 'err-tel',      fn: v => v.trim().length > 5 },
+    { id: 'f-email',    err: 'err-email',    fn: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+  ];
+  checks.forEach(c => {
+    const el = document.getElementById(c.id);
+    const er = document.getElementById(c.err);
+    if (!c.fn(el.value)) { el.classList.add('error'); er.style.display = 'block'; ok = false; }
+    else { el.classList.remove('error'); er.style.display = 'none'; }
+  });
+  return ok;
+}
+
+function fmtDT(val) {
+  if (!val) return '';
+  const d = new Date(val);
+  return d.toLocaleDateString('de-AT', { weekday:'short', day:'2-digit', month:'2-digit', year:'numeric' })
+    + ' um ' + d.toLocaleTimeString('de-AT', { hour:'2-digit', minute:'2-digit' }) + ' Uhr';
+}
+
+document.getElementById('booking-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  if (!validate()) { document.querySelector('.form-control.error').scrollIntoView({ behavior:'smooth', block:'center' }); return; }
+
+  const btn = document.getElementById('submit-btn');
+  document.getElementById('btn-text').textContent = 'Wird gesendet…';
+  document.getElementById('btn-spinner').style.display = 'block';
+  btn.disabled = true;
+
+  const payload = {
+    name:      document.getElementById('f-name').value.trim(),
+    von:       fmtDT(document.getElementById('f-von').value),
+    bis:       fmtDT(document.getElementById('f-bis').value),
+    preis:     document.getElementById('price-display').textContent,
+    tel:       document.getElementById('f-tel').value.trim(),
+    email:     document.getElementById('f-email').value.trim(),
+    adresse:   document.getElementById('f-adresse').value.trim(),
+    direction: document.getElementById('direction').value,
+    personen:  document.getElementById('f-personen').value,
+    gepaeck:   document.getElementById('f-gepaeck').value,
+    notiz:     document.getElementById('f-notiz').value.trim(),
+    timestamp: new Date().toLocaleString('de-AT')
+  };
+
+  try {
+    if (APPS_SCRIPT_URL !== 'DEINE_APPS_SCRIPT_URL_HIER') {
+      await fetch(APPS_SCRIPT_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    } else {
+      await new Promise(r => setTimeout(r, 900)); // demo delay
+    }
+  } catch(_) { /* no-cors — can't read response, proceed anyway */ }
+
+  showThankYou(payload);
+});
+
+function showThankYou(d) {
+  document.getElementById('main-page').style.display = 'none';
+  const ty = document.getElementById('thank-you');
+  ty.style.display = 'flex';
+  document.getElementById('ty-name').textContent     = d.name;
+  document.getElementById('ty-dir').textContent      = d.direction;
+  document.getElementById('ty-adresse').textContent  = d.adresse;
+  document.getElementById('ty-von').textContent      = d.von;
+  document.getElementById('ty-personen').textContent = d.personen;
+  document.getElementById('ty-kontakt').textContent  = d.tel + ' · ' + d.email;
+  document.getElementById('ty-preis').textContent    = d.preis;
+  if (d.bis) {
+    document.getElementById('ty-bis').textContent = d.bis;
+    document.getElementById('ty-bis-row').style.display = 'flex';
   }
+  const msg = encodeURIComponent(
+    `Hallo Oliver! Ich habe soeben eine Buchung abgeschickt.\n\nName: ${d.name}\nRichtung: ${d.direction}\nAbholung: ${d.adresse}\nDatum: ${d.von}\nPersonen: ${d.personen}\n\nBitte bestätigen!`
+  );
+  document.getElementById('ty-wa-btn').href = `https://wa.me/4369919567596?text=${msg}`;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resetForm() {
+  document.getElementById('booking-form').reset();
+  document.getElementById('price-display').textContent = 'auf Anfrage';
+  document.getElementById('thank-you').style.display = 'none';
+  document.getElementById('main-page').style.display = 'block';
+  document.getElementById('submit-btn').disabled = false;
+  document.getElementById('btn-text').textContent = '✈ Buchung absenden';
+  document.getElementById('btn-spinner').style.display = 'none';
+  document.getElementById('ty-bis-row').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
 </script>
 </body>
 </html>
