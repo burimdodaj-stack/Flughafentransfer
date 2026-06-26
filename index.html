@@ -27,6 +27,11 @@ ul,ol{list-style:none}
 @keyframes rot{to{transform:rotate(360deg)}}
 .spin{width:18px;height:18px;border:2.5px solid #cfe0fa;border-top-color:#1A6BE0;border-radius:50%;animation:rot .7s linear infinite;display:inline-block}
 .hidden{display:none!important}
+.ac-wrap{position:relative}
+.ac-list{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:40;background:#fff;border:1px solid #E4EAF3;border-radius:11px;box-shadow:0 14px 34px -10px rgba(16,40,82,.26);overflow:hidden;max-height:250px;overflow-y:auto}
+.ac-list li{padding:11px 14px;font-size:14px;color:#16233D;cursor:pointer;border-bottom:1px solid #F1F5FB;line-height:1.35}
+.ac-list li:last-child{border-bottom:none}
+.ac-list li:hover{background:#F3F8FF}
 .price-box{margin:2px 0 16px;border:1.5px solid #DCE7F6;background:#F3F8FF;border-radius:13px;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:58px}
 .price-box .lbl{font-size:12px;color:#5E6B82;font-weight:600;text-transform:uppercase;letter-spacing:.03em}
 .price-box .km{font-size:12.5px;color:#8794A8;margin-top:3px}
@@ -130,7 +135,10 @@ ul,ol{list-style:none}
           </div>
           <!-- Adresse -->
           <label style="display:block;font-size:13px;font-weight:600;color:#5E6B82;margin-bottom:6px" data-i18n="lblAddress"></label>
-          <input name="address" id="address" type="text" oninput="onAddressInput()" required style="width:100%;padding:13px 14px;border:1.5px solid #E4EAF3;border-radius:11px;font-size:15px;background:#fff;color:#16233D;margin-bottom:16px">
+          <div class="ac-wrap" style="margin-bottom:16px">
+            <input name="address" id="address" type="text" autocomplete="off" oninput="onAddressInput()" onblur="setTimeout(hideAc,150)" required style="width:100%;padding:13px 14px;border:1.5px solid #E4EAF3;border-radius:11px;font-size:15px;background:#fff;color:#16233D">
+            <ul id="acList" class="ac-list hidden"></ul>
+          </div>
           <!-- Live-Preis -->
           <div id="priceBox" class="price-box hidden">
             <div>
@@ -486,6 +494,7 @@ const I18N = {
 // ── State ─────────────────────────────────────────────────────────────
 let lang='de', airport='VIE', tripType='round', persons=2, openFaq=0;
 let lastKm=null, lastRate=null, lastRabRound=0, lastRabOneway=0, lastRabReturn=0, priceTimer=null;
+let acItems=[], acTimer=null;
 
 const $=(id)=>document.getElementById(id);
 const t=()=>I18N[lang];
@@ -586,9 +595,45 @@ function toggleFaq(i){openFaq=(openFaq===i?-1:i);renderFaq();}
 function onAddressInput(){
   clearTimeout(priceTimer);
   const a=$('address').value.trim();
+  if(a.length<3){ hideAc(); }
+  else { clearTimeout(acTimer); acTimer=setTimeout(fetchSuggestions,250); }
   if(a.length<4){$('priceBox').classList.add('hidden');lastKm=null;return;}
   priceTimer=setTimeout(fetchPrice,800);
 }
+
+// ── Adress-Vorschläge (Photon / OpenStreetMap, kostenlos, kein Key) ────
+function formatPhoton(p){
+  const l1=[p.street||p.name, p.housenumber].filter(Boolean).join(' ');
+  const l2=[p.postcode, p.city||p.district||p.state].filter(Boolean).join(' ');
+  return [l1||p.name, l2].filter(Boolean).join(', ').trim();
+}
+function fetchSuggestions(){
+  const a=$('address').value.trim();
+  if(a.length<3){hideAc();return;}
+  const url='https://photon.komoot.io/api/?lang=de&limit=8&lat=48.2092&lon=16.3728&q='+encodeURIComponent(a);
+  fetch(url).then(r=>r.json()).then(d=>{
+    const seen={};
+    const items=(d.features||[]).map(f=>f.properties)
+      .filter(p=> p.countrycode==='AT' || /Österreich|Austria/i.test(p.country||''))
+      .map(formatPhoton)
+      .filter(v=> v && !seen[v] && (seen[v]=1))
+      .slice(0,5);
+    renderAc(items);
+  }).catch(()=>hideAc());
+}
+function renderAc(items){
+  acItems=items;
+  if(!items.length){hideAc();return;}
+  $('acList').innerHTML=items.map((s,i)=>
+    `<li onmousedown="pickAc(${i})">${s}</li>`).join('');
+  $('acList').classList.remove('hidden');
+}
+function pickAc(i){
+  $('address').value=acItems[i];
+  hideAc();
+  fetchPrice();
+}
+function hideAc(){ $('acList').classList.add('hidden'); }
 function fetchPrice(){
   const a=$('address').value.trim();
   if(a.length<4){$('priceBox').classList.add('hidden');return;}
@@ -696,6 +741,7 @@ function showConfirmation(g, airportName, tripTxt, von, bis, preis){
 function resetForm(){
   $('bookForm').reset();
   lastKm=null;lastRate=null;lastRabRound=0;lastRabOneway=0;lastRabReturn=0;
+  hideAc();
   $('priceBox').classList.add('hidden');
   $('confBox').classList.add('hidden');
   $('bookForm').classList.remove('hidden');
