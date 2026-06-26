@@ -372,7 +372,7 @@ ul,ol{list-style:none}
 // ════════════════════════════════════════════════════════════════════
 //  ⬇⬇⬇  HIER deine Apps-Script /exec-URL einsetzen  ⬇⬇⬇
 //  (Nach jedem Code.gs-Update: NEUE Bereitstellung → neue URL → hier rein)
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxeTMklx4C444mlcnVDOxYRAmrsOBhPomqDqu78fOGCThtE3ccsZOx9oZCXToRYcVJa/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby4NSxmKH1OfTwZjQ0NxQyyOI5fgUl-OblvHN9IYl6N-UMVAj4piFrR-OqAmKNXZDRZ/exec';
 // ⬆⬆⬆ ────────────────────────────────────────────────────────────────
 
 // ── Texte DE / EN ─────────────────────────────────────────────────────
@@ -841,10 +841,44 @@ function getPlatform(){
     return 'Andere';
   }catch(e){ return 'Unbekannt'; }
 }
-function trackVisit(){
+// ── Region per IP ermitteln (3 Dienste als Fallback-Kette) ────────────
+function getRegion(){
+  const svc=[
+    {url:'https://ipapi.co/json/',              f:d=>({city:d.city,country:d.country_name})},
+    {url:'https://ipwho.is/',                   f:d=>(d&&d.success===false)?null:({city:d.city,country:d.country})},
+    {url:'https://get.geojs.io/v1/ip/geo.json', f:d=>({city:d.city,country:d.country})}
+  ];
+  function tryNext(i){
+    if(i>=svc.length) return Promise.resolve(null);
+    return fetch(svc[i].url).then(r=>{if(!r.ok)throw 0;return r.json();})
+      .then(d=>{const p=svc[i].f(d); return (p&&(p.city||p.country))?p:tryNext(i+1);})
+      .catch(()=>tryNext(i+1));
+  }
+  return tryNext(0);
+}
+function tzFallback(){
   try{
-    fetch(APPS_SCRIPT_URL+'?action=visit&vid='+encodeURIComponent(getVisitorId())+'&platform='+encodeURIComponent(getPlatform())).catch(()=>{});
-  }catch(e){}
+    const tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';
+    const m={'Europe/Vienna':'Wien, Österreich','Europe/Berlin':'Deutschland','Europe/Zurich':'Schweiz',
+             'Europe/Bratislava':'Slowakei','Europe/Budapest':'Ungarn','Europe/Prague':'Tschechien'};
+    return m[tz]?{city:'',country:m[tz]}:null;
+  }catch(e){ return null; }
+}
+function regionText(d){
+  if(!d) return '';
+  if(d.city&&d.country) return d.city+', '+d.country;
+  return d.city||d.country||'';
+}
+function trackVisit(){
+  function send(region){
+    fetch(APPS_SCRIPT_URL+'?action=visit'
+      +'&vid='+encodeURIComponent(getVisitorId())
+      +'&platform='+encodeURIComponent(getPlatform())
+      +'&region='+encodeURIComponent(region||'')).catch(()=>{});
+  }
+  try{
+    getRegion().then(d=>{ if(!d) d=tzFallback(); send(regionText(d)); }).catch(()=>send(''));
+  }catch(e){ send(''); }
 }
 
 // ── Init ──────────────────────────────────────────────────────────────
