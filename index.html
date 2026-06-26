@@ -184,19 +184,20 @@ ul,ol{list-style:none}
           </div>
           <!-- Kontakt -->
           <label style="display:block;font-size:13px;font-weight:600;color:#5E6B82;margin-bottom:6px" data-i18n="lblName"></label>
-          <input name="name" type="text" required style="width:100%;padding:13px 14px;border:1.5px solid #E4EAF3;border-radius:11px;font-size:15px;background:#fff;color:#16233D;margin-bottom:14px">
+          <input name="name" type="text" required oninput="saveContact()" style="width:100%;padding:13px 14px;border:1.5px solid #E4EAF3;border-radius:11px;font-size:15px;background:#fff;color:#16233D;margin-bottom:14px">
           <div data-2col style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
             <div>
               <label style="display:block;font-size:13px;font-weight:600;color:#5E6B82;margin-bottom:6px" data-i18n="lblPhone"></label>
-              <input name="phone" type="tel" required style="width:100%;padding:13px 14px;border:1.5px solid #E4EAF3;border-radius:11px;font-size:15px;background:#fff;color:#16233D">
+              <input name="phone" type="tel" required oninput="saveContact()" style="width:100%;padding:13px 14px;border:1.5px solid #E4EAF3;border-radius:11px;font-size:15px;background:#fff;color:#16233D">
             </div>
             <div>
               <label style="display:block;font-size:13px;font-weight:600;color:#5E6B82;margin-bottom:6px" data-i18n="lblEmail"></label>
-              <input name="email" type="email" required style="width:100%;padding:13px 14px;border:1.5px solid #E4EAF3;border-radius:11px;font-size:15px;background:#fff;color:#16233D">
+              <input name="email" type="email" required oninput="saveContact()" style="width:100%;padding:13px 14px;border:1.5px solid #E4EAF3;border-radius:11px;font-size:15px;background:#fff;color:#16233D">
             </div>
           </div>
           <button type="submit" id="submitBtn" style="width:100%;background:#F39214;color:#fff;font-family:'Sora';font-weight:800;font-size:17px;padding:16px;border-radius:13px;border:none;cursor:pointer;box-shadow:0 10px 22px rgba(243,146,20,.34)" data-i18n="submit"></button>
           <p style="text-align:center;font-size:12.5px;color:#8794A8;margin-top:12px" data-i18n="formMicro"></p>
+          <p id="forgetWrap" class="hidden" style="text-align:center;margin-top:4px"><a onclick="forgetContact()" style="color:#9AA6B8;font-size:12px;cursor:pointer;text-decoration:underline" data-i18n="forget"></a></p>
         </form>
 
         <!-- BESTÄTIGUNG -->
@@ -389,7 +390,7 @@ const I18N = {
   lblAddress:'Ihre Adresse', priceLabel:'Ihr Festpreis',
   lblOutbound:'Hinfahrt', lblReturn:'Rückfahrt', lblPersons:'Personen', personsHint:'inkl. Gepäck',
   lblName:'Name', lblPhone:'Telefon', lblEmail:'E-Mail',
-  submit:'Jetzt Festpreis sichern', formMicro:'Unverbindlich · Festpreis-Garantie · Kostenlose Stornierung',
+  submit:'Jetzt Festpreis sichern', formMicro:'Unverbindlich · Festpreis-Garantie · Kostenlose Stornierung', forget:'Gespeicherte Daten löschen',
   confTitle:'Anfrage erhalten – danke!', confText:'Wir bestätigen Ihren Transfer per E-Mail innerhalb weniger Minuten. Für die sofortige Buchung rufen Sie uns an:', confSummary:'Ihre Anfrage', confAnother:'Weitere Anfrage senden',
   proofBadge:'4,9 von 5 auf Google', proofTitle:'Tausende Reisende vertrauen GoToAirport.',
   proofText:'Ob Frühflug oder späte Landung – unsere geprüften Chauffeure empfangen Sie persönlich, helfen mit dem Gepäck und bringen Sie sicher und entspannt ans Ziel.',
@@ -449,7 +450,7 @@ const I18N = {
   lblAddress:'Your address', priceLabel:'Your fixed price',
   lblOutbound:'Outbound', lblReturn:'Return', lblPersons:'Passengers', personsHint:'incl. luggage',
   lblName:'Name', lblPhone:'Phone', lblEmail:'Email',
-  submit:'Get my fixed price', formMicro:'No obligation · Fixed-price guarantee · Free cancellation',
+  submit:'Get my fixed price', formMicro:'No obligation · Fixed-price guarantee · Free cancellation', forget:'Clear saved details',
   confTitle:'Request received – thank you!', confText:'We will confirm your transfer by email within minutes. To book instantly, just call us:', confSummary:'Your request', confAnother:'Send another request',
   proofBadge:'4.9 out of 5 on Google', proofTitle:'Thousands of travellers trust GoToAirport.',
   proofText:'Early flight or late landing – our vetted chauffeurs greet you in person, help with your luggage and get you to your destination safely and relaxed.',
@@ -601,6 +602,7 @@ function toggleFaq(i){openFaq=(openFaq===i?-1:i);renderFaq();}
 // ── Preis live berechnen ──────────────────────────────────────────────
 function onAddressInput(){
   clearTimeout(priceTimer);
+  saveContact();
   const a=$('address').value.trim();
   if(a.length<3){ hideAc(); }
   else { clearTimeout(acTimer); acTimer=setTimeout(fetchSuggestions,250); }
@@ -638,6 +640,7 @@ function renderAc(items){
 function pickAc(i){
   $('address').value=acItems[i];
   hideAc();
+  saveContact();
   fetchPrice();
 }
 function hideAc(){ $('acList').classList.add('hidden'); }
@@ -776,10 +779,47 @@ function resetForm(){
   $('bookForm').classList.remove('hidden');
   persons=2;tripType='round';airport='VIE';
   refreshToggles();
+  loadContact();
+}
+
+// ── Eingaben merken (nur lokal im Browser des Besuchers) ───────────────
+const LS_KEY='gta_contact';
+function fld(n){return document.querySelector('[name='+n+']');}
+function saveContact(){
+  try{
+    localStorage.setItem(LS_KEY, JSON.stringify({
+      name:fld('name').value, phone:fld('phone').value,
+      email:fld('email').value, address:$('address').value
+    }));
+    updateForgetLink();
+  }catch(e){}
+}
+function loadContact(){
+  try{
+    const raw=localStorage.getItem(LS_KEY);
+    if(!raw){updateForgetLink();return;}
+    const d=JSON.parse(raw);
+    if(d.name)  fld('name').value=d.name;
+    if(d.phone) fld('phone').value=d.phone;
+    if(d.email) fld('email').value=d.email;
+    if(d.address){ $('address').value=d.address; fetchPrice(); }
+    updateForgetLink();
+  }catch(e){}
+}
+function forgetContact(){
+  try{ localStorage.removeItem(LS_KEY); }catch(e){}
+  ['name','phone','email'].forEach(n=>fld(n).value='');
+  $('address').value='';
+  hideAc(); $('priceBox').classList.add('hidden'); lastKm=null;
+  updateForgetLink();
+}
+function updateForgetLink(){
+  let has=false; try{ has=!!localStorage.getItem(LS_KEY); }catch(e){}
+  const el=$('forgetWrap'); if(el) el.classList.toggle('hidden',!has);
 }
 
 // ── Init ──────────────────────────────────────────────────────────────
-applyText();renderLists();refreshToggles();
+applyText();renderLists();refreshToggles();loadContact();
 </script>
 </body>
 </html>
