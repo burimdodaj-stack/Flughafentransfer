@@ -38,6 +38,7 @@ ul,ol{list-style:none}
 .price-box .save{font-size:12.5px;font-weight:700;color:#1F9D6B;margin-top:4px;display:inline-flex;align-items:center;gap:5px}
 .price-box .save::before{content:'';width:14px;height:14px;border-radius:50%;background:#E4F4EC center/9px no-repeat}
 .price-box .val{font-family:'Sora';font-weight:800;font-size:28px;color:#1A6BE0;letter-spacing:-.02em;line-height:1}
+.price-box .orig{font-size:14px;color:#9AA6B8;font-weight:600;text-decoration:line-through;margin-bottom:2px}
 @media (max-width:920px){
  [data-deknav]{display:none!important}
  [data-hero]{grid-template-columns:1fr!important;gap:34px!important}
@@ -150,7 +151,10 @@ ul,ol{list-style:none}
             </div>
             <div id="priceRight" style="display:flex;align-items:center;gap:10px">
               <span id="priceSpin" class="spin hidden"></span>
-              <span id="priceVal" class="val">—</span>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;line-height:1.1">
+                <span id="priceOrig" class="orig hidden"></span>
+                <span id="priceVal" class="val">—</span>
+              </div>
             </div>
           </div>
           <!-- Hinfahrt -->
@@ -672,6 +676,12 @@ function currentPrice(){
   if(rab>0) base=base*(1-rab/100);
   return Math.round(base*100)/100;
 }
+function currentFull(){
+  if(lastKm==null||lastRate==null) return null;
+  let full=lastKm*lastRate;
+  if(tripType==='round') full=full*2;
+  return Math.round(full*100)/100;
+}
 function currentSavings(){
   if(lastKm==null||lastRate==null) return 0;
   let full=lastKm*lastRate, rab=0;
@@ -694,9 +704,13 @@ function updatePriceUI(){
     $('priceVal').textContent=fmtEur(p);
     const tripTxt=tripType==='round'?t().tripRound:tripType==='oneway'?t().tripOneway:t().tripReturn;
     $('priceKm').textContent='ca. '+lastKm+' km · '+tripTxt;
-    const s=currentSavings(), save=$('priceSave');
-    if(s>0){ save.textContent=(lang==='de'?'Sie sparen ':'You save ')+fmtEur(s); save.classList.remove('hidden'); }
-    else save.classList.add('hidden');
+    const s=currentSavings(), save=$('priceSave'), orig=$('priceOrig');
+    if(s>0){
+      save.textContent=(lang==='de'?'Sie sparen ':'You save ')+fmtEur(s); save.classList.remove('hidden');
+      orig.textContent=fmtEur(currentFull()); orig.classList.remove('hidden');
+    }else{
+      save.classList.add('hidden'); orig.classList.add('hidden');
+    }
   }
   $('priceBox').querySelector('.lbl').textContent=t().priceLabel;
 }
