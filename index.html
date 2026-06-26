@@ -356,7 +356,7 @@ ul,ol{list-style:none}
 // ════════════════════════════════════════════════════════════════════
 //  ⬇⬇⬇  HIER deine Apps-Script /exec-URL einsetzen  ⬇⬇⬇
 //  (Nach jedem Code.gs-Update: NEUE Bereitstellung → neue URL → hier rein)
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxbQshLS_533td8OnLuoYT06PPX7IkhVINpZdzUyvy8K-2f-wdWphhovXHRfsv3bABt/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwKadF3wjkZvTgRtHgoKHExgw0_fnYZK6-Mb2fIfnPNlIydG8eWInD8_qN10Hccf2xM/exec';
 // ⬆⬆⬆ ────────────────────────────────────────────────────────────────
 
 // ── Texte DE / EN ─────────────────────────────────────────────────────
@@ -485,7 +485,7 @@ const I18N = {
 
 // ── State ─────────────────────────────────────────────────────────────
 let lang='de', airport='VIE', tripType='round', persons=2, openFaq=0;
-let lastKm=null, lastRate=null, priceTimer=null;
+let lastKm=null, lastRate=null, lastRabRound=0, lastRabOneway=0, lastRabReturn=0, priceTimer=null;
 
 const $=(id)=>document.getElementById(id);
 const t=()=>I18N[lang];
@@ -601,6 +601,7 @@ function fetchPrice(){
     $('priceSpin').classList.add('hidden');
     if(d.status==='ok'){
       lastKm=d.km; lastRate=d.preisProKm;
+      lastRabRound=d.rabattRound||0; lastRabOneway=d.rabattOneway||0; lastRabReturn=d.rabattReturn||0;
       computePrice();
     }else{
       lastKm=null;
@@ -616,9 +617,16 @@ function fetchPrice(){
 }
 function currentPrice(){
   if(lastKm==null||lastRate==null) return null;
-  let base=lastKm*lastRate;
-  if(tripType==='round') base=base*2*0.8;   // Hin & Retour: 20% Rabatt
-  return Math.round(base);
+  let base=lastKm*lastRate, rab=0;
+  if(tripType==='round'){ base=base*2; rab=lastRabRound; }
+  else if(tripType==='oneway'){ rab=lastRabOneway; }
+  else { rab=lastRabReturn; }
+  if(rab>0) base=base*(1-rab/100);
+  return Math.round(base*100)/100;
+}
+function fmtEur(v){
+  if(v==null) return '—';
+  return (Math.round(v*100)/100).toString().replace('.',',')+' €';
 }
 function computePrice(){updatePriceUI();}
 function updatePriceUI(){
@@ -626,7 +634,7 @@ function updatePriceUI(){
   if(p==null){
     if(lastKm==null) return;
   }else{
-    $('priceVal').textContent=p+' €';
+    $('priceVal').textContent=fmtEur(p);
     const tripTxt=tripType==='round'?t().tripRound:tripType==='oneway'?t().tripOneway:t().tripReturn;
     $('priceKm').textContent='ca. '+lastKm+' km · '+tripTxt;
   }
@@ -674,7 +682,7 @@ function showConfirmation(g, airportName, tripTxt, von, bis, preis){
   if(tripType!=='return') rows.push([T.lblOutbound, von||'—']);
   if(tripType!=='oneway') rows.push([T.lblReturn, bis||'—']);
   rows.push([T.lblPersons, String(persons)]);
-  if(preis!=null) rows.push([T.priceLabel, preis+' €']);
+  if(preis!=null) rows.push([T.priceLabel, fmtEur(preis)]);
   rows.push([T.lblName, g('name')||'—']);
   rows.push([T.lblPhone, g('phone')||'—']);
   rows.push([T.lblEmail, g('email')||'—']);
@@ -687,7 +695,7 @@ function showConfirmation(g, airportName, tripTxt, von, bis, preis){
 }
 function resetForm(){
   $('bookForm').reset();
-  lastKm=null;lastRate=null;
+  lastKm=null;lastRate=null;lastRabRound=0;lastRabOneway=0;lastRabReturn=0;
   $('priceBox').classList.add('hidden');
   $('confBox').classList.add('hidden');
   $('bookForm').classList.remove('hidden');
