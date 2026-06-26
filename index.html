@@ -32,6 +32,36 @@ ul,ol{list-style:none}
 .ac-list li{padding:11px 14px;font-size:14px;color:#16233D;cursor:pointer;border-bottom:1px solid #F1F5FB;line-height:1.35}
 .ac-list li:last-child{border-bottom:none}
 .ac-list li:hover{background:#F3F8FF}
+/* Cookie-Consent */
+#ckBanner{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;z-index:80;width:min(440px,calc(100vw - 32px));background:#fff;border:1px solid #E7EDF6;border-radius:16px;box-shadow:0 18px 50px -12px rgba(16,40,82,.32);padding:18px 18px 15px}
+#ckBanner h4{font-family:'Sora';font-weight:800;font-size:16px;color:#0E2A52;margin-bottom:6px}
+#ckBanner p{font-size:13px;color:#5E6B82;line-height:1.5;margin-bottom:14px}
+.ck-btns{display:flex;gap:8px}
+.ck-btn{flex:1;text-align:center;padding:11px 8px;border-radius:10px;font-weight:700;font-size:13.5px;cursor:pointer;border:1.5px solid transparent;font-family:inherit;transition:all .15s;line-height:1.2}
+.ck-btn.primary{background:#1A6BE0;color:#fff}
+.ck-btn.primary:hover{background:#1556bd}
+.ck-btn.secondary{background:#fff;border-color:#D5E1F2;color:#1A6BE0}
+.ck-btn.secondary:hover{background:#EFF5FE}
+.ck-link{display:block;width:100%;text-align:center;margin-top:9px;background:none;border:none;color:#8794A8;font-size:12.5px;cursor:pointer;text-decoration:underline;font-family:inherit}
+#ckModal{position:fixed;inset:0;z-index:90;background:rgba(14,42,82,.45);display:flex;align-items:center;justify-content:center;padding:18px}
+.ck-card{background:#fff;border-radius:18px;max-width:460px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 24px 60px -18px rgba(16,40,82,.4);padding:22px}
+.ck-card h4{font-family:'Sora';font-weight:800;font-size:18px;color:#0E2A52;margin-bottom:14px}
+.ck-cat{border:1px solid #E7EDF6;border-radius:12px;padding:14px;margin-bottom:10px}
+.ck-cat-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ck-cat-title{font-weight:700;font-size:14.5px;color:#0E2A52}
+.ck-cat-desc{font-size:12.5px;color:#6B7892;margin-top:6px;line-height:1.5}
+.ck-always{font-size:12px;font-weight:700;color:#1F9D6B;white-space:nowrap}
+.ck-tog{position:relative;width:42px;height:24px;flex-shrink:0}
+.ck-tog input{opacity:0;width:0;height:0;position:absolute}
+.ck-slider{position:absolute;inset:0;background:#D5DEEC;border-radius:999px;cursor:pointer;transition:.2s}
+.ck-slider::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.ck-tog input:checked + .ck-slider{background:#1A6BE0}
+.ck-tog input:checked + .ck-slider::before{transform:translateX(18px)}
+.ck-modal-btns{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.ck-modal-btns .ck-btn{flex:none;width:100%}
+@media (max-width:920px){
+  #ckBanner{left:8px;right:8px;transform:none;width:auto;bottom:78px;border-radius:14px}
+}
 .price-box{margin:2px 0 16px;border:1.5px solid #DCE7F6;background:#F3F8FF;border-radius:13px;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:58px}
 .price-box .lbl{font-size:12px;color:#5E6B82;font-weight:600;text-transform:uppercase;letter-spacing:.03em}
 .price-box .km{font-size:12.5px;color:#8794A8;margin-top:3px}
@@ -355,6 +385,7 @@ ul,ol{list-style:none}
         <a href="#">Impressum</a>
         <a href="#" data-i18n="footPrivacy"></a>
         <a href="#">AGB</a>
+        <a onclick="openCookieSettings()" style="cursor:pointer" data-i18n="ckFooterLink"></a>
       </div>
     </div>
   </div>
@@ -366,6 +397,49 @@ ul,ol{list-style:none}
   <a href="#buchen" style="flex:1.4;display:flex;align-items:center;justify-content:center;background:#F39214;color:#fff;font-family:'Sora';font-weight:700;font-size:15px;padding:13px;border-radius:12px" data-i18n="book"></a>
 </div>
 
+</div>
+
+<!-- ============ COOKIE-CONSENT ============ -->
+<div id="ckBanner" class="hidden" role="dialog" aria-label="Cookies & Datenschutz">
+  <h4 data-i18n="ckTitle"></h4>
+  <p data-i18n="ckText"></p>
+  <div class="ck-btns">
+    <button type="button" class="ck-btn secondary" onclick="ckChoose(false,false)" data-i18n="ckNecessaryOnly"></button>
+    <button type="button" class="ck-btn primary" onclick="ckChoose(true,true)" data-i18n="ckAcceptAll"></button>
+  </div>
+  <button type="button" class="ck-link" onclick="openCookieSettings()" data-i18n="ckSettings"></button>
+</div>
+
+<div id="ckModal" class="hidden">
+  <div class="ck-card" role="dialog" aria-modal="true">
+    <h4 data-i18n="ckTitle"></h4>
+    <div class="ck-cat">
+      <div class="ck-cat-head">
+        <span class="ck-cat-title" data-i18n="ckNecTitle"></span>
+        <span class="ck-always" data-i18n="ckAlwaysOn"></span>
+      </div>
+      <div class="ck-cat-desc" data-i18n="ckNecDesc"></div>
+    </div>
+    <div class="ck-cat">
+      <div class="ck-cat-head">
+        <span class="ck-cat-title" data-i18n="ckStatTitle"></span>
+        <label class="ck-tog"><input type="checkbox" id="ckStat"><span class="ck-slider"></span></label>
+      </div>
+      <div class="ck-cat-desc" data-i18n="ckStatDesc"></div>
+    </div>
+    <div class="ck-cat">
+      <div class="ck-cat-head">
+        <span class="ck-cat-title" data-i18n="ckMktTitle"></span>
+        <label class="ck-tog"><input type="checkbox" id="ckMkt"><span class="ck-slider"></span></label>
+      </div>
+      <div class="ck-cat-desc" data-i18n="ckMktDesc"></div>
+    </div>
+    <div class="ck-modal-btns">
+      <button type="button" class="ck-btn primary" onclick="ckSaveSelection()" data-i18n="ckSave"></button>
+      <button type="button" class="ck-btn secondary" onclick="ckChoose(true,true)" data-i18n="ckAcceptAll"></button>
+      <button type="button" class="ck-btn secondary" onclick="ckChoose(false,false)" data-i18n="ckNecessaryOnly"></button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -435,7 +509,14 @@ const I18N = {
   footCompany:'GoToAirport', footContact:'Kontakt',
   footHoursTitle:'Verfügbarkeit', footHours:'Täglich rund um die Uhr · 24 / 7 / 365',
   footAreaTitle:'Einsatzgebiet', footArea:'Wien, Niederösterreich, Burgenland & Umgebung',
-  footRights:'Alle Rechte vorbehalten.', footPrivacy:'Datenschutz'
+  footRights:'Alle Rechte vorbehalten.', footPrivacy:'Datenschutz',
+  ckTitle:'Cookies & Datenschutz',
+  ckText:'Wir verwenden notwendige Cookies, damit die Website und die Buchungsanfrage funktionieren. Optional nutzen wir Statistik und Marketing, um unsere Website zu verbessern und Werbung zu messen. Sie entscheiden selbst.',
+  ckNecessaryOnly:'Nur notwendige', ckAcceptAll:'Alle akzeptieren', ckSettings:'Einstellungen', ckSave:'Auswahl speichern',
+  ckNecTitle:'Notwendig', ckAlwaysOn:'Immer aktiv', ckNecDesc:'Erforderlich für Buchungsanfrage, Sicherheit und Grundfunktionen.',
+  ckStatTitle:'Statistik', ckStatDesc:'Hilft uns zu verstehen, welche Seiten genutzt werden. Wird nur nach Zustimmung geladen.',
+  ckMktTitle:'Marketing', ckMktDesc:'Hilft uns, Werbung und Kampagnen zu messen, z. B. Google Ads oder Meta Pixel. Wird nur nach Zustimmung geladen.',
+  ckFooterLink:'Cookie-Einstellungen'
  },
  en:{
   navPrices:'Prices', navHow:'How it works', navReviews:'Reviews', navFaq:'FAQ', book:'Book now', callShort:'☎ Call',
@@ -495,7 +576,14 @@ const I18N = {
   footCompany:'GoToAirport', footContact:'Contact',
   footHoursTitle:'Availability', footHours:'Daily, around the clock · 24 / 7 / 365',
   footAreaTitle:'Service area', footArea:'Vienna, Lower Austria, Burgenland & surroundings',
-  footRights:'All rights reserved.', footPrivacy:'Privacy'
+  footRights:'All rights reserved.', footPrivacy:'Privacy',
+  ckTitle:'Cookies & Privacy',
+  ckText:'We use necessary cookies so the website and booking request work. Optionally we use statistics and marketing to improve our site and measure advertising. You decide.',
+  ckNecessaryOnly:'Necessary only', ckAcceptAll:'Accept all', ckSettings:'Settings', ckSave:'Save selection',
+  ckNecTitle:'Necessary', ckAlwaysOn:'Always on', ckNecDesc:'Required for booking requests, security and core functions.',
+  ckStatTitle:'Statistics', ckStatDesc:'Helps us understand which pages are used. Loaded only after consent.',
+  ckMktTitle:'Marketing', ckMktDesc:'Helps us measure advertising and campaigns, e.g. Google Ads or Meta Pixel. Loaded only after consent.',
+  ckFooterLink:'Cookie settings'
  }
 };
 
@@ -735,7 +823,6 @@ function submitBooking(e){
 
   const params=new URLSearchParams({
     action:'book',
-    vid:getVisitorId(),
     name:g('name'), tel:g('phone'), email:g('email'),
     adresse:g('address'),
     direction:airport+' · '+tripTxt,
@@ -744,6 +831,7 @@ function submitBooking(e){
     km:lastKm!=null?String(lastKm):'',
     preis:preis!=null?String(preis):''
   });
+  if(consent.statistics) params.set('vid', getVisitorId());
 
   fetch(APPS_SCRIPT_URL+'?'+params.toString())
     .then(r=>r.json()).catch(()=>({status:'ok'}))
@@ -881,8 +969,64 @@ function trackVisit(){
   }catch(e){ send(''); }
 }
 
+// ── Cookie-Consent (zentrale Logik) ───────────────────────────────────
+const CONSENT_KEY='gta_consent';
+let consent={statistics:false, marketing:false};
+let statsStarted=false, mktLoaded=false;
+
+function ckLoadDecision(){
+  try{ const r=localStorage.getItem(CONSENT_KEY); if(r){ const c=JSON.parse(r); consent.statistics=!!c.statistics; consent.marketing=!!c.marketing; return true; } }catch(e){}
+  return false;
+}
+function ckStore(){
+  try{ localStorage.setItem(CONSENT_KEY, JSON.stringify({statistics:consent.statistics, marketing:consent.marketing, ts:Date.now(), v:1})); }catch(e){}
+}
+function ckApply(){
+  if(consent.statistics) startStatistics(); else stopStatistics();
+  if(consent.marketing)  startMarketing();  else stopMarketing();
+}
+function ckChoose(stat, mkt){ consent.statistics=stat; consent.marketing=mkt; ckStore(); ckApply(); ckHide(); }
+function ckSaveSelection(){ consent.statistics=$('ckStat').checked; consent.marketing=$('ckMkt').checked; ckStore(); ckApply(); ckHide(); }
+function ckHide(){ $('ckBanner').classList.add('hidden'); $('ckModal').classList.add('hidden'); }
+function openCookieSettings(){
+  $('ckStat').checked=consent.statistics; $('ckMkt').checked=consent.marketing;
+  $('ckBanner').classList.add('hidden'); $('ckModal').classList.remove('hidden');
+}
+
+// Statistik = unser Besucher-Tracking (Tracking-Sheet + Region per IP)
+function startStatistics(){ if(statsStarted) return; statsStarted=true; trackVisit(); }
+function stopStatistics(){ statsStarted=false; try{ localStorage.removeItem('gta_vid'); }catch(e){} }
+
+// Marketing = Pixel/Tags (Meta, Google Ads …) – erst nach Zustimmung laden
+function startMarketing(){
+  if(mktLoaded) return; mktLoaded=true;
+  // ▼▼▼ HIER Marketing-Skripte einsetzen, sobald du IDs hast ▼▼▼
+  // Meta Pixel Beispiel:
+  //   !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  //   n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  //   n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  //   t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+  //   (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  //   fbq('init','DEINE_PIXEL_ID'); fbq('track','PageView');
+  // ▲▲▲ ------------------------------------------------------- ▲▲▲
+}
+function stopMarketing(){
+  mktLoaded=false;
+  try{ document.cookie.split(';').forEach(function(c){
+    const n=c.split('=')[0].trim();
+    if(/^(_fbp|_fbc|_ga|_gid|_gat|_gcl)/.test(n)){
+      document.cookie=n+'=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+      document.cookie=n+'=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.'+location.hostname;
+    }
+  }); }catch(e){}
+}
+function initConsent(){
+  if(ckLoadDecision()){ ckApply(); }                 // schon entschieden → anwenden, kein Banner
+  else { $('ckBanner').classList.remove('hidden'); } // noch keine Wahl → Banner, nichts tracken
+}
+
 // ── Init ──────────────────────────────────────────────────────────────
-applyText();renderLists();refreshToggles();loadContact();trackVisit();
+applyText();renderLists();refreshToggles();loadContact();initConsent();
 </script>
 </body>
 </html>
