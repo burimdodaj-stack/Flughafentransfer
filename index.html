@@ -372,7 +372,7 @@ ul,ol{list-style:none}
 // ════════════════════════════════════════════════════════════════════
 //  ⬇⬇⬇  HIER deine Apps-Script /exec-URL einsetzen  ⬇⬇⬇
 //  (Nach jedem Code.gs-Update: NEUE Bereitstellung → neue URL → hier rein)
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwKadF3wjkZvTgRtHgoKHExgw0_fnYZK6-Mb2fIfnPNlIydG8eWInD8_qN10Hccf2xM/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxeTMklx4C444mlcnVDOxYRAmrsOBhPomqDqu78fOGCThtE3ccsZOx9oZCXToRYcVJa/exec';
 // ⬆⬆⬆ ────────────────────────────────────────────────────────────────
 
 // ── Texte DE / EN ─────────────────────────────────────────────────────
@@ -735,6 +735,7 @@ function submitBooking(e){
 
   const params=new URLSearchParams({
     action:'book',
+    vid:getVisitorId(),
     name:g('name'), tel:g('phone'), email:g('email'),
     adresse:g('address'),
     direction:airport+' · '+tripTxt,
@@ -818,8 +819,36 @@ function updateForgetLink(){
   const el=$('forgetWrap'); if(el) el.classList.toggle('hidden',!has);
 }
 
+// ── Besucher-Tracking ─────────────────────────────────────────────────
+function getVisitorId(){
+  try{
+    let id=localStorage.getItem('gta_vid');
+    if(!id){ id='v_'+Date.now()+'_'+Math.random().toString(36).substr(2,9); localStorage.setItem('gta_vid',id); }
+    return id;
+  }catch(e){ return 'v_'+Date.now(); }
+}
+function getPlatform(){
+  try{
+    const p=new URLSearchParams(location.search);
+    const src=p.get('utm_source')||p.get('source'); if(src) return src;
+    const r=document.referrer||'';
+    if(/facebook|fb\./i.test(r)) return 'Facebook';
+    if(/instagram/i.test(r))     return 'Instagram';
+    if(/google/i.test(r))        return 'Google';
+    if(/tiktok/i.test(r))        return 'TikTok';
+    if(/willhaben/i.test(r))     return 'willhaben';
+    if(!r) return 'Direkt';
+    return 'Andere';
+  }catch(e){ return 'Unbekannt'; }
+}
+function trackVisit(){
+  try{
+    fetch(APPS_SCRIPT_URL+'?action=visit&vid='+encodeURIComponent(getVisitorId())+'&platform='+encodeURIComponent(getPlatform())).catch(()=>{});
+  }catch(e){}
+}
+
 // ── Init ──────────────────────────────────────────────────────────────
-applyText();renderLists();refreshToggles();loadContact();
+applyText();renderLists();refreshToggles();loadContact();trackVisit();
 </script>
 </body>
 </html>
