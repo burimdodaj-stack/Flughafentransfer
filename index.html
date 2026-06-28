@@ -165,6 +165,9 @@ ul,ol{list-style:none}
 .foot-links a{font-size:13px;color:#7e93b8}
 .foot-bottom{font-size:11px;color:#4a6080;display:flex;justify-content:space-between;flex-wrap:wrap;gap:5px;margin-top:16px}
 
+/* dt-root hidden by default (mobile/tablet) */
+#dt-root{display:none}
+
 /* ══════════════════════════════════════════════════════════════════
    DESKTOP LAYOUT  (≥1024px)
 ══════════════════════════════════════════════════════════════════ */
@@ -174,7 +177,8 @@ ul,ol{list-style:none}
   /* Shell becomes full-width centering wrapper */
   .shell{align-items:flex-start;justify-content:center;padding:0}
 
-  /* Phone card hidden on desktop – we use dt-* wrappers instead */
+  /* Mobile shell + phone hidden on desktop – we use dt-* wrappers instead */
+  .shell{display:none!important}
   .phone{display:none!important}
 
   /* Desktop root */
@@ -254,8 +258,6 @@ ul,ol{list-style:none}
   .phone{width:540px;max-width:100%}
 }
 
-/* dt-root hidden on mobile */
-#dt-root{display:none}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"TaxiService","name":"AirportHome","description":"Privater Flughafentransfer zum Flughafen Wien (VIE) und Flughafen Bratislava (BTS) mit Festpreis-Garantie, Flugüberwachung und 24/7 Verfügbarkeit.","url":"https://www.airporthome.at/","telephone":"+43 699 19567596","priceRange":"€€","areaServed":["Wien","Niederösterreich","Burgenland","Bratislava"],"provider":{"@type":"LocalBusiness","name":"AirportHome","openingHours":"Mo-Su 00:00-24:00"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"1200","bestRating":"5"}}
@@ -1893,8 +1895,10 @@ function renderDesktop(){
   if(badge) badge.textContent=airport==='BTS'?'Flughafentransfer Wien & Bratislava':'Flughafentransfer Wien';
 
   const hl=document.getElementById('dt-headline');
-  if(hl) hl.innerHTML=T.appHeroTitle+(airport==='VIE'?'VIE':airport==='BTS'?'BTS':'')?
-    (T['appHeroTitle'+airport]||T.appHeroTitle) : T.appHeroTitle;
+  if(hl){
+    const key='appHeroTitle'+(airport==='VIE'?'VIE':'BTS');
+    hl.innerHTML=T[key]||T.appHeroTitle;
+  }
 
   const sl=document.getElementById('dt-subline');
   if(sl) sl.innerHTML=T.appHeroSub||'';
