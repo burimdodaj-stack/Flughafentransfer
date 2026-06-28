@@ -40,11 +40,27 @@ ul,ol{list-style:none}
 .dt{flex:1;min-width:0;height:42px;border:1.5px solid #e2e8f0;border-radius:10px;padding:0 10px;font-size:13px;color:#475569;background:#fff}
 .dt.time{width:104px;flex:none}
 /* Native date/time icons (Kalender/Uhr statt Dropdown-Pfeil) */
-input[type="date"].dt,input[type="time"].dt{position:relative;background-repeat:no-repeat;background-position:right 9px center;background-size:16px 16px;padding-right:32px}
+input[type="date"].dt,input[type="time"].dt{
+  -webkit-appearance:none;-moz-appearance:none;appearance:none;
+  position:relative;background-repeat:no-repeat;background-position:right 9px center;
+  background-size:16px 16px;padding-right:32px;
+}
 input[type="date"].dt{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E")}
 input[type="time"].dt{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpolyline points='12 7 12 12 15 14'/%3E%3C/svg%3E")}
-input[type="date"].dt::-webkit-calendar-picker-indicator,input[type="time"].dt::-webkit-calendar-picker-indicator{opacity:0;position:absolute;top:0;right:0;left:0;bottom:0;width:100%;height:100%;margin:0;cursor:pointer}
-input[type="date"].dt::-webkit-inner-spin-button,input[type="time"].dt::-webkit-inner-spin-button,input[type="date"].dt::-webkit-clear-button,input[type="time"].dt::-webkit-clear-button{display:none;-webkit-appearance:none}
+input[type="date"].dt::-webkit-calendar-picker-indicator,
+input[type="time"].dt::-webkit-calendar-picker-indicator{
+  -webkit-appearance:none;appearance:none;
+  opacity:0;position:absolute;top:0;left:0;right:0;bottom:0;
+  width:100%;height:100%;margin:0;padding:0;cursor:pointer;background:transparent;
+}
+input[type="date"].dt::-webkit-inner-spin-button,
+input[type="time"].dt::-webkit-inner-spin-button,
+input[type="date"].dt::-webkit-clear-button,
+input[type="time"].dt::-webkit-clear-button,
+input[type="date"].dt::-webkit-calendar-picker-indicator,
+input[type="time"].dt::-webkit-calendar-picker-indicator{filter:none}
+input[type="date"].dt::-webkit-inner-spin-button,
+input[type="time"].dt::-webkit-inner-spin-button{display:none;-webkit-appearance:none}
 /* Cookie-Streifen */
 #ckBanner{position:fixed;left:10px;right:10px;bottom:74px;z-index:80;max-width:400px;margin:0 auto;background:#0f1f3c;color:#fff;border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;box-shadow:0 10px 28px rgba(15,31,60,.34)}
 #ckBanner p{font-size:11px;line-height:1.35;flex:1;color:#cdd9ee}
@@ -265,11 +281,22 @@ input[type="date"].dt::-webkit-inner-spin-button,input[type="time"].dt::-webkit-
 }
 
 
-/* Desktop date/time icons */
-#dtOutDate,#dtRetDate,#dtOutTime,#dtRetTime{background-repeat:no-repeat;background-position:right 9px center;background-size:16px 16px;padding-right:32px!important}
+/* Desktop date/time icons (Kalender/Uhr statt Dropdown-Pfeil) */
+#dtOutDate,#dtRetDate,#dtOutTime,#dtRetTime{
+  -webkit-appearance:none;-moz-appearance:none;appearance:none;
+  position:relative;background-repeat:no-repeat;background-position:right 9px center;
+  background-size:16px 16px;padding-right:32px!important;
+}
 #dtOutDate,#dtRetDate{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E")}
 #dtOutTime,#dtRetTime{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpolyline points='12 7 12 12 15 14'/%3E%3C/svg%3E")}
-#dtOutDate::-webkit-calendar-picker-indicator,#dtRetDate::-webkit-calendar-picker-indicator,#dtOutTime::-webkit-calendar-picker-indicator,#dtRetTime::-webkit-calendar-picker-indicator{opacity:0;position:absolute;width:42px;cursor:pointer}
+#dtOutDate::-webkit-calendar-picker-indicator,#dtRetDate::-webkit-calendar-picker-indicator,
+#dtOutTime::-webkit-calendar-picker-indicator,#dtRetTime::-webkit-calendar-picker-indicator{
+  -webkit-appearance:none;appearance:none;
+  opacity:0;position:absolute;top:0;left:0;right:0;bottom:0;
+  width:100%;height:100%;margin:0;padding:0;cursor:pointer;background:transparent;
+}
+#dtOutDate::-webkit-inner-spin-button,#dtRetDate::-webkit-inner-spin-button,
+#dtOutTime::-webkit-inner-spin-button,#dtRetTime::-webkit-inner-spin-button{display:none;-webkit-appearance:none}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"TaxiService","name":"AirportHome","description":"Privater Flughafentransfer zum Flughafen Wien (VIE) und Flughafen Bratislava (BTS) mit Festpreis-Garantie, Flugüberwachung und 24/7 Verfügbarkeit.","url":"https://www.airporthome.at/","telephone":"+43 699 19567596","priceRange":"€€","areaServed":["Wien","Niederösterreich","Burgenland","Bratislava"],"provider":{"@type":"LocalBusiness","name":"AirportHome","openingHours":"Mo-Su 00:00-24:00"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"1200","bestRating":"5"}}
@@ -372,8 +399,8 @@ input[type="date"].dt::-webkit-inner-spin-button,input[type="time"].dt::-webkit-
         <span class="lblrow" style="color:#ea8a1e">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M11 6l-6 6 6 6" stroke="#ea8a1e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="lblReturn"></span>
         </span>
-        <input name="retDate" type="date" class="dt" style="border-color:#fde7c8;background:#fffaf2" aria-label="Rückflugdatum" inputmode="none">
-        <input name="retTime" type="time" class="dt time" style="border-color:#fde7c8;background:#fffaf2" aria-label="Geplante Landezeit" inputmode="none">
+        <input name="retDate" type="date" class="dt" style="border-color:#fde7c8;background-color:#fffaf2" aria-label="Rückflugdatum" inputmode="none">
+        <input name="retTime" type="time" class="dt time" style="border-color:#fde7c8;background-color:#fffaf2" aria-label="Geplante Landezeit" inputmode="none">
       </div>
 
     </div>
@@ -578,7 +605,7 @@ input[type="date"].dt::-webkit-inner-spin-button,input[type="time"].dt::-webkit-
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 21s7-5.7 7-11a7 7 0 10-14 0c0 5.3 7 11 7 11z" stroke="#94a3b8" stroke-width="1.8"/><circle cx="12" cy="10" r="2.5" stroke="#94a3b8" stroke-width="1.8"/></svg>
             </span>
             <input id="dtAddress" type="text" autocomplete="off" oninput="dtOnAddressInput()" onblur="setTimeout(dtHideAc,150)"
-              style="width:100%;height:44px;border:1.5px solid #e2e8f0;border-radius:11px;padding:0 13px 0 38px;font-size:14px;color:#0f1f3c;background:#fff;font-family:inherit"
+              style="width:100%;height:44px;border:1.5px solid #e2e8f0;border-radius:11px;padding:0 13px 0 38px;font-size:14px;color:#0f1f3c;background-color:#fff;font-family:inherit"
               data-ph="lblAddress">
             <ul id="dtAcList" class="ac-list hidden" style="top:calc(100% + 5px)"></ul>
           </div>
@@ -589,8 +616,8 @@ input[type="date"].dt::-webkit-inner-spin-button,input[type="time"].dt::-webkit-
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span data-i18n="lblOutbound"></span>
             </span>
-            <input id="dtOutDate" type="date" inputmode="none" style="flex:1;height:42px;border:1.5px solid #e2e8f0;border-radius:10px;padding:0 10px;font-size:13px;color:#475569;background:#fff;font-family:inherit">
-            <input id="dtOutTime" type="time" inputmode="none" style="width:104px;height:42px;border:1.5px solid #e2e8f0;border-radius:10px;padding:0 10px;font-size:13px;color:#475569;background:#fff;font-family:inherit">
+            <input id="dtOutDate" type="date" inputmode="none" style="flex:1;height:42px;border:1.5px solid #e2e8f0;border-radius:10px;padding:0 10px;font-size:13px;color:#475569;background-color:#fff;font-family:inherit">
+            <input id="dtOutTime" type="time" inputmode="none" style="width:104px;height:42px;border:1.5px solid #e2e8f0;border-radius:10px;padding:0 10px;font-size:13px;color:#475569;background-color:#fff;font-family:inherit">
           </div>
 
           <!-- Return row -->
@@ -599,8 +626,8 @@ input[type="date"].dt::-webkit-inner-spin-button,input[type="time"].dt::-webkit-
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M11 6l-6 6 6 6" stroke="#ea8a1e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span data-i18n="lblReturn"></span>
             </span>
-            <input id="dtRetDate" type="date" inputmode="none" style="flex:1;height:42px;border:1.5px solid #fde7c8;border-radius:10px;padding:0 10px;font-size:13px;color:#475569;background:#fffaf2;font-family:inherit">
-            <input id="dtRetTime" type="time" inputmode="none" style="width:104px;height:42px;border:1.5px solid #fde7c8;border-radius:10px;padding:0 10px;font-size:13px;color:#475569;background:#fffaf2;font-family:inherit">
+            <input id="dtRetDate" type="date" inputmode="none" style="flex:1;height:42px;border:1.5px solid #fde7c8;border-radius:10px;padding:0 10px;font-size:13px;color:#475569;background-color:#fffaf2;font-family:inherit">
+            <input id="dtRetTime" type="time" inputmode="none" style="width:104px;height:42px;border:1.5px solid #fde7c8;border-radius:10px;padding:0 10px;font-size:13px;color:#475569;background-color:#fffaf2;font-family:inherit">
           </div>
 
           <!-- Price box -->
@@ -659,7 +686,7 @@ input[type="date"].dt::-webkit-inner-spin-button,input[type="time"].dt::-webkit-
         <div style="display:flex;align-items:center;gap:8px">
           <span style="font-size:12.5px;font-weight:600;color:#64748b;flex:none" data-i18n="lblPersons"></span>
           <div style="flex:1;position:relative">
-            <select id="dtPersonsSelect" style="width:100%;height:44px;border:1.5px solid #e2e8f0;border-radius:11px;padding:0 30px 0 13px;font-size:14px;color:#0f1f3c;background:#fff;font-family:inherit;appearance:none;-webkit-appearance:none;cursor:pointer">
+            <select id="dtPersonsSelect" style="width:100%;height:44px;border:1.5px solid #e2e8f0;border-radius:11px;padding:0 30px 0 13px;font-size:14px;color:#0f1f3c;background-color:#fff;font-family:inherit;appearance:none;-webkit-appearance:none;cursor:pointer">
               <option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option>
             </select>
             <svg style="position:absolute;right:11px;top:50%;transform:translateY(-50%);pointer-events:none" width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#64748b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -668,7 +695,7 @@ input[type="date"].dt::-webkit-inner-spin-button,input[type="time"].dt::-webkit-
         <div style="display:flex;align-items:center;gap:8px">
           <span style="font-size:12.5px;font-weight:600;color:#64748b;flex:none" data-i18n="lblLuggage"></span>
           <div style="flex:1;position:relative">
-            <select id="dtLuggage" style="width:100%;height:44px;border:1.5px solid #e2e8f0;border-radius:11px;padding:0 30px 0 13px;font-size:14px;color:#0f1f3c;background:#fff;font-family:inherit;appearance:none;-webkit-appearance:none;cursor:pointer">
+            <select id="dtLuggage" style="width:100%;height:44px;border:1.5px solid #e2e8f0;border-radius:11px;padding:0 30px 0 13px;font-size:14px;color:#0f1f3c;background-color:#fff;font-family:inherit;appearance:none;-webkit-appearance:none;cursor:pointer">
               <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option>
             </select>
             <svg style="position:absolute;right:11px;top:50%;transform:translateY(-50%);pointer-events:none" width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#64748b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
